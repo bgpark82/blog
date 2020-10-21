@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserTest {
 
     @Test
-    void custom_builder_test() {
+    void 커스텀_Builder_테스트() {
         User user = User.builder()
                 .username("name")
                 .build();

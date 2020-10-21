@@ -17,6 +17,10 @@ public class User {
         return new UserBuilder();
     }
 
+    public User(String username) {
+        this.username = username;
+    }
+
     @ToString
     // 1. inner static class UserBuilder
     public static final class UserBuilder {

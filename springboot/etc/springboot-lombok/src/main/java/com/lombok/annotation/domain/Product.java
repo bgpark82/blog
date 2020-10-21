@@ -1,14 +1,18 @@
 package com.lombok.annotation.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
-@Builder
 public class Product {
 
-    @Builder.Default private long created = System.currentTimeMillis();
-    private String name;
+    private Long id;
+    private final String name;
+    private final String description;
+
+    @Builder
+    public Product(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

@@ -9,9 +9,10 @@ class ProductTest {
     @Test
     void Default_테스트() {
         Product product = Product.builder()
-                .name("박병길")
+                .name("상품")
                 .build();
 
-        assertThat(product.getCreated()).isNotZero();
+        System.out.println(product);
     }
+
 }
