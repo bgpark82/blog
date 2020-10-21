@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="observer.ObserverTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-09-29T08:01:07" hostname="Byeonggilui-MacBook-Pro.local" time="0.007">
+  <properties/>
+  <testcase name="observer" classname="observer.ObserverTest" time="0.007"/>
+  <system-out><![CDATA[observer.Button@6ee24b34is Clicked
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
