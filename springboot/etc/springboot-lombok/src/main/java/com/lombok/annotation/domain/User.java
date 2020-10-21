@@ -7,7 +7,6 @@ import lombok.ToString;
 
 
 @Getter
-@AllArgsConstructor
 public class User {
 
     private String username;
