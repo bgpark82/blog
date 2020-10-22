@@ -2,6 +2,7 @@ package com.custom.validation.domain;
 
 import com.custom.validation.domain.user.User;
 import com.custom.validation.domain.user.UserRepository;
+import com.custom.validation.exception.ApiError;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,11 +17,14 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
 
+    private static String API_URL = "/api/v1/user";
+
     @Autowired
     TestRestTemplate template;
 
     @Autowired
     UserRepository userRepository;
+
 
     @Test
     void 사용자_저장_사용자이름_null() {
@@ -55,7 +59,17 @@ class UserControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
+    @Test
+    void API_에러() {
+        User user = new User();
+        ResponseEntity<ApiError> response = postApi(user, ApiError.class);
+        System.out.println(response);
+        assertThat(response.getBody().getUrl()).isEqualTo(API_URL);
+        assertThat(response.getBody().getValidationError().get("username")).isEqualTo("널이어서는 안됩니다");
+        assertThat(response.getBody().getValidationError().get("password")).isEqualTo("널이어서는 안됩니다");
+    }
+
     private <T> ResponseEntity<T> postApi(Object request, Class<T> response) {
-        return template.postForEntity("/api/v1/user", request, response);
+        return template.postForEntity(API_URL, request, response);
     }
 }
