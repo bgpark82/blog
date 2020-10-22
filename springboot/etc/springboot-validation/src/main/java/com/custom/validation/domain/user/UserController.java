@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
@@ -16,10 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> save( @RequestBody User user) {
-        if(user.getUsername() == null) {
-            throw new UserNotValidException();
-        }
+    public ResponseEntity<User> save(@Valid @RequestBody User user) {
         userService.save(user);
         return ResponseEntity.ok(user);
     }

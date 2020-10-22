@@ -33,6 +33,28 @@ class UserControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
+    @Test
+    void 사용자_저장_비밀번호_null() {
+        User user = User.builder()
+                .username("박병길")
+                .password(null)
+                .build();
+
+        ResponseEntity<Object> response = postApi(user, Object.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void 사용자_저장_짧은_이름() {
+        User user = User.builder()
+                .username("박병길")
+                .password(null)
+                .build();
+
+        ResponseEntity<Object> response = postApi(user, Object.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
     private <T> ResponseEntity<T> postApi(Object request, Class<T> response) {
         return template.postForEntity("/api/v1/user", request, response);
     }
