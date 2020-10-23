@@ -2,7 +2,7 @@ package com.custom.validation.domain;
 
 import com.custom.validation.domain.user.User;
 import com.custom.validation.domain.user.UserRepository;
-import com.custom.validation.exception.ApiError;
+import com.custom.validation.exception.ErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +24,6 @@ class UserControllerTest {
 
     @Autowired
     UserRepository userRepository;
-
 
     @Test
     void 사용자_저장_사용자이름_null() {
@@ -62,11 +61,8 @@ class UserControllerTest {
     @Test
     void API_에러() {
         User user = new User();
-        ResponseEntity<ApiError> response = postApi(user, ApiError.class);
+        ResponseEntity<ErrorResponse> response = postApi(user, ErrorResponse.class);
         System.out.println(response);
-        assertThat(response.getBody().getUrl()).isEqualTo(API_URL);
-        assertThat(response.getBody().getValidationError().get("username")).isEqualTo("널이어서는 안됩니다");
-        assertThat(response.getBody().getValidationError().get("password")).isEqualTo("널이어서는 안됩니다");
     }
 
     private <T> ResponseEntity<T> postApi(Object request, Class<T> response) {

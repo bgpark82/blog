@@ -1,7 +1,6 @@
 package com.custom.validation.domain.user;
 
-import com.custom.validation.exception.ApiError;
-import com.custom.validation.exception.UserNotValidException;
+import com.custom.validation.exception.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +26,5 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ApiError handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {
-        ApiError apiError = new ApiError(400, "Validation error", request.getServletPath());
-        BindingResult result = exception.getBindingResult();
-        HashMap<String, String> validationError = new HashMap<>();
-        for (FieldError fieldError : result.getFieldErrors()){
-            validationError.put(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        apiError.setValidationError(validationError);
-        return apiError;
-    };
+
 }
