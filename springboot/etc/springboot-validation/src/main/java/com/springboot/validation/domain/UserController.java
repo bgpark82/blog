@@ -17,9 +17,4 @@ public class UserController {
     public User save(@Valid @RequestBody User user) {
         return user;
     }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    ResponseEntity<String> handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {
-        return new ResponseEntity<>("사용자 이름을 입력해주세요", HttpStatus.BAD_REQUEST);
-    }
 }
