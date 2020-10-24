@@ -41,12 +41,14 @@ class UserControllerTest {
                 .username(null)
                 .build());
 
-
         mvc.perform(post("/api/v1/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(user))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("사용자 이름을 입력해주세요"));
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("사용자 이름을 입력해주세요"))
+                .andExpect(jsonPath("$.code").value("U400"))
+                .andExpect(jsonPath("$.timestamp").exists());
     }
 }
