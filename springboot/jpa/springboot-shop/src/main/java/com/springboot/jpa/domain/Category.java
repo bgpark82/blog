@@ -8,6 +8,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.*;
+
 @Entity
 @Getter @Setter
 public class Category {
@@ -29,7 +31,7 @@ public class Category {
      * 혼자서 자식과 부모를 다 가질 수 있다
      * 혼자서 @ManyToOne, @OneToMany 다 가진다
      */
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
 
