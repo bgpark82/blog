@@ -35,9 +35,22 @@ public class Category {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
+    /*
+     * 필드에서 초기화 바로 한다.
+     * beat practice
+     * 영속화되면 하이버네이트가 추적할 수 있는 collection으로 변경한다
+     * 그래서 해당 Collection을 변경하지 않는다
+     */
     @OneToMany(mappedBy = "parent")
     private List<Category> child = new ArrayList<>();
 
+    /*
+     * 연관관계 편의 메소드
+     */
+    public void addChildCategory(Category child) {
+        this.child.add(child);
+        child.setParent(this);
+    }
 }
 
 
