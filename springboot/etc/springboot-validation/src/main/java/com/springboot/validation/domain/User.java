@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class User {
 
     private Long id;
-    @NotNull
+    @NotNull(message = "사용자 이름을 입력해주세요")
     private String username;
     private String password;
 }

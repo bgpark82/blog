@@ -3,6 +3,7 @@ package com.springboot.validation.exception;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
 
@@ -16,10 +17,17 @@ public class ErrorResponse {
     private String timestamp;
 
     @Builder
-    public ErrorResponse(int status, String message, String code) {
-        this.status = status;
-        this.message = message;
-        this.code = code;
+    public ErrorResponse(ErrorCode errorCode) {
+        this.status = errorCode.getStatus();
+        this.message = errorCode.getMessage();
+        this.code = errorCode.getCode();
+        this.timestamp = LocalDateTime.now().toString();
+    }
+
+    public ErrorResponse(ErrorCode errorCode, BindingResult result) {
+        this.status = errorCode.getStatus();
+        this.message = result.getFieldError().getDefaultMessage();
+        this.code = errorCode.getCode();
         this.timestamp = LocalDateTime.now().toString();
     }
 }
