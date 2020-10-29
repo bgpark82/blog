@@ -1,7 +1,8 @@
 package com.springboot.jpa.repository;
 
+import com.springboot.jpa.domain.Order;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.annotation.Order;
+
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

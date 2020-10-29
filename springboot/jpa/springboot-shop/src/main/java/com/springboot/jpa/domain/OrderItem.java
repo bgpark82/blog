@@ -1,13 +1,20 @@
 package com.springboot.jpa.domain;
 
 import com.springboot.jpa.domain.item.Item;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
 import static javax.persistence.FetchType.*;
 
+/**
+ * 외부 로직에서 NEW 생성자로 생성하지 못하도록
+ * 이미 createOrderItem이라는 생성 로직이 있으므로 기본생성자를 막ㅏ 놓ㄴ는다
+ */
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter @Setter
 public class OrderItem {
