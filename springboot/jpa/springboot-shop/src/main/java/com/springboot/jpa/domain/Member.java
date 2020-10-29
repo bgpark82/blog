@@ -21,6 +21,10 @@ public class Member {
     @Column(name="member_id")
     private Long id;
 
+    /**
+     * 멀티스레드 상황을 고려해서 유니크 제약 조건을 추가하는 것이 좋다
+     */
+    @Column(unique = true)
     private String name;
 
     /*
