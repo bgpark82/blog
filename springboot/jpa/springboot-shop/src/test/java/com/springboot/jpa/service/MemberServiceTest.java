@@ -2,6 +2,7 @@ package com.springboot.jpa.service;
 
 import com.springboot.jpa.domain.Member;
 import com.springboot.jpa.repository.MemberRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +26,7 @@ class MemberServiceTest {
     @Autowired
     MemberRepository memberRepository;
 
+    @Disabled
     @Test
     public void 회원가입() throws Exception {
         //Given
@@ -38,6 +40,7 @@ class MemberServiceTest {
         assertEquals(member, memberRepository.findOne(saveId));
     }
 
+    @Disabled
     @Test
     public void 중복_회원_예외() throws Exception {
 
