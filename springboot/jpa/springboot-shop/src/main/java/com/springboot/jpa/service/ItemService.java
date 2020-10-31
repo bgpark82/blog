@@ -15,6 +15,18 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
 
+    /**
+     * 영속성 컨텍스트가 자동 변경
+     * 컨트롤러에서 명확한 id와 데이터를 받아온다
+     * 값이 많으면 Dto를 생성한다
+     */
+    @Transactional
+    public void updateItem(Long id, String name, int price) {
+        Item item = itemRepository.findOne(id);
+        item.setName(name);
+        item.setPrice(price);
+    }
+
     @Transactional
     public void saveItem(Item item) {
         itemRepository.save(item);
