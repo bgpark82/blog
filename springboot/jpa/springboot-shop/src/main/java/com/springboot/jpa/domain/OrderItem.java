@@ -1,10 +1,7 @@
 package com.springboot.jpa.domain;
 
 import com.springboot.jpa.domain.item.Item;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 

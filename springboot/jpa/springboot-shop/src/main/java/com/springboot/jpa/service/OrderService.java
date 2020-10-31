@@ -4,9 +4,12 @@ import com.springboot.jpa.domain.*;
 import com.springboot.jpa.domain.item.Item;
 import com.springboot.jpa.repository.MemberRepository;
 import com.springboot.jpa.repository.OrderRepository;
+import com.springboot.jpa.repository.OrderSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +21,14 @@ public class OrderService {
     private final ItemService itemService;
 
     /** 주문 */
+    /**
+     * 최대한 모든 로직을 Transactional 안에서 처리하는 것이 좋다
+     * 왜냐면 commit 이전에는 영속성 컨텍스트에서 관리할 수 있기 때문이다
+     * @param memberId
+     * @param itemId
+     * @param count
+     * @return
+     */
     @Transactional
     public Long order(Long memberId, Long itemId, int count) {
 
@@ -72,10 +83,10 @@ public class OrderService {
     }
 
     /** 주문 검색 */
-    /*
+
     public List<Order> findOrders(OrderSearch orderSearch) {
         return orderRepository.findAll(orderSearch);
     }
-    */
+
 
 }
