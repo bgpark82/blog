@@ -19,20 +19,25 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+
     @GetMapping(value = "/members/new")
     public String createForm(Model model) {
         model.addAttribute("memberForm", new MemberForm());
         return "members/createMemberForm";
     }
+
     @PostMapping(value = "/members/new")
     public String create(@Valid MemberForm form, BindingResult result) {
 
         if (result.hasErrors()) {
             return "members/createMemberForm";
         }
+
         Address address = new Address(form.getCity(), form.getStreet(), form.getZipcode());
         Member member = new Member();
-        member.setName(form.getName()); member.setAddress(address);
+        member.setName(form.getName());
+        member.setAddress(address);
+
         memberService.join(member);
         return "redirect:/";
     }

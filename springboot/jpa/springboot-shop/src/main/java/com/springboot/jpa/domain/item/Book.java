@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+// B라는 dtype 컬럼을 생성
 @Entity
 @DiscriminatorValue("B")
 @Getter
