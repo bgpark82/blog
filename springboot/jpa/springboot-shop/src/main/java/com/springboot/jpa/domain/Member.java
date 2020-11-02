@@ -1,5 +1,6 @@
 package com.springboot.jpa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,7 +43,9 @@ public class Member {
 
     /*
      * mappedBy : order에 의해 매핑되었을 뿐이다.
+     * JsonIgnore : 순수한 Member 데이터만 보내기 위해, 좋은 방법 아님!
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<Order>();
 }
