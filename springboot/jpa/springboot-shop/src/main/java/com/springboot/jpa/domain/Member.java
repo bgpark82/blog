@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,12 @@ public class Member {
 
     /**
      * 멀티스레드 상황을 고려해서 유니크 제약 조건을 추가하는 것이 좋다
+     * - 프레젠테이션 레이어에서 사용하는 validation 로직이 도메인 로직에 들어가 있네?
+     * - api 스펙이 도메인 스펙과 다를 수 있다
+     * - 엔티티는 여러곳에서 사용된다
+     * - 엔티티와 API의 스펙은 분리되어야 한다
      */
+    @NotEmpty
     @Column(unique = true)
     private String name;
 
