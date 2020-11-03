@@ -1,12 +1,18 @@
 package com.springboot.jpa.api;
 
+import com.springboot.jpa.domain.Address;
 import com.springboot.jpa.domain.Order;
+import com.springboot.jpa.domain.OrderStatus;
 import com.springboot.jpa.repository.OrderRepository;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /** *
  * xToOne(ManyToOne, OneToOne) 관계 최적화
@@ -26,12 +32,44 @@ public class OrderSimpleApiController {
      * - Hibernate5Module 모듈 등록, LAZY=null 처리 * - 양방향 관계 문제 발생 -> @JsonIgnore
      * - 양방향 무한루프 문제
      */
-    @GetMapping("/api/v1/simple-orders") public List<Order> ordersV1() {
-        List<Order> all = orderRepository.findAll();
-        for (Order order : all) {
-            order.getMember().getName();        //Lazy 강제 초기화
-            order.getDelivery().getAddress();   //Lazy 강제 초기환
-            return all;
+//    @GetMapping("/api/v1/simple-orders") public List<Order> ordersV1() {
+//        List<Order> all = orderRepository.findAll();
+//        for (Order order : all) {
+//            order.getMember().getName();        //Lazy 강제 초기화
+//            order.getDelivery().getAddress();   //Lazy 강제 초기환
+//            return all;
+//        }
+//    }
+
+    /**
+     * V2. 엔티티를 조회해서 DTO로 변환(fetch join 사용X)
+     * - 단점: 지연로딩으로 쿼리 N번 호출
+     */
+    @GetMapping("/api/v2/simple-orders") public List<SimpleOrderDto> ordersV2() {
+        // 1. Order 10개 조회 -> DB 쿼리
+        // N + 1 -> Order 조회 쿼리 1에 Member, Delivery 조회 쿼리가 10번 실행
+        List<Order> orders = orderRepository.findAll();
+
+        // 2. Order 두개를 돌면서 초기화
+        List<SimpleOrderDto> result = orders.stream()
+                .map(SimpleOrderDto::new)
+                .collect(Collectors.toList());
+        return result;
+    }
+    @Data
+    static class SimpleOrderDto {
+        private Long orderId;
+        private String name;
+        private LocalDateTime orderDate; //주문시간
+        private OrderStatus orderStatus;
+        private Address address;
+
+        public SimpleOrderDto(Order order) {
+            orderId = order.getId();
+            name = order.getMember().getName();         // 3. 첫번쨰 Lazy 초기화 -> DB 쿼리, 6. 두번쨰 Lazy 초기화 -> DB 쿼리
+            orderDate = order.getOrderDate();
+            orderStatus = order.getStatus();
+            address = order.getDelivery().getAddress(); // 4. 첫번쨰 Lazy 초기화 -> DB 쿼리, 7. 두번쨰 Lazy 초기화 -> DB 쿼리
         }
     }
 }
