@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 /** *
  * xToOne(ManyToOne, OneToOne) 관계 최적화
  * Order
@@ -45,17 +47,31 @@ public class OrderSimpleApiController {
      * V2. 엔티티를 조회해서 DTO로 변환(fetch join 사용X)
      * - 단점: 지연로딩으로 쿼리 N번 호출
      */
-    @GetMapping("/api/v2/simple-orders") public List<SimpleOrderDto> ordersV2() {
-        // 1. Order 10개 조회 -> DB 쿼리
-        // N + 1 -> Order 조회 쿼리 1에 Member, Delivery 조회 쿼리가 10번 실행
-        List<Order> orders = orderRepository.findAll();
+//    @GetMapping("/api/v2/simple-orders") public List<SimpleOrderDto> ordersV2() {
+//        // 1. Order 10개 조회 -> DB 쿼리
+//        // N + 1 -> Order 조회 쿼리 1에 Member, Delivery 조회 쿼리가 10번 실행
+//        List<Order> orders = orderRepository.findAll();
+//
+//        // 2. Order 두개를 돌면서 초기화
+//        List<SimpleOrderDto> result = orders.stream()
+//                .map(SimpleOrderDto::new)
+//                .collect(Collectors.toList());
+//        return result;
+//    }
 
-        // 2. Order 두개를 돌면서 초기화
+    /**
+     * V3. 엔티티를 조회해서 DTO로 변환(fetch join 사용O)
+     * - fetch join으로 쿼리 1번 호출
+     * 참고: fetch join에 대한 자세한 내용은 JPA 기본편 참고(정말 중요함) */
+    @GetMapping("/api/v3/simple-orders") public List<SimpleOrderDto> ordersV3() {
+        List<Order> orders = orderRepository.findAllWithMemberDelivery();
         List<SimpleOrderDto> result = orders.stream()
-                .map(SimpleOrderDto::new)
-                .collect(Collectors.toList());
+                .map(o -> new SimpleOrderDto(o))
+                .collect(toList());
         return result;
     }
+
+
     @Data
     static class SimpleOrderDto {
         private Long orderId;

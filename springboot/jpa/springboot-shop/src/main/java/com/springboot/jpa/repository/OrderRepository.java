@@ -77,4 +77,12 @@ public class OrderRepository {
 
         }
 
+
+    // 객체를 한방 쿼리로 가져오고 싶을 때
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery("select o from Order o" +
+                " join fetch o.member m" +
+                " join fetch o.delivery d", Order.class) .getResultList();
+    }
+
 }
