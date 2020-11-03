@@ -27,6 +27,8 @@ public class OrderRepository {
         return em.find(Order.class, id);
     }
 
+
+
     /**
      * 검색 로직
      * JPQL로 생성
