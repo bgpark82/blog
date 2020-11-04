@@ -54,14 +54,31 @@ public class OrderApiController {
 //        return all;
 //    }
 
-    @GetMapping("/api/v2/orders")
-    public List<OrderDto> ordersV2() {
-        List<Order> orders = orderRepository.findAll();
+//    @GetMapping("/api/v2/orders")
+//    public List<OrderDto> ordersV2() {
+//        List<Order> orders = orderRepository.findAll();
+//        List<OrderDto> result = orders.stream()
+//                .map(o -> new OrderDto(o)).collect(toList());
+//        return result;
+//    }
+
+    // 객체의 리스트를 가지고 있으면 Join 시에 같은 객체가 리스트의 개수만큼 행에 나타난다
+    // 조인 4개??
+    //
+    @GetMapping("/api/v3/orders")
+    public List<OrderDto> ordersV3() {
+        List<Order> orders = orderRepository.findAllWithItem();
+
+        // 같은 객체가 반복된다
+        for (Order order: orders) {
+            System.out.println("ordre ref=" + order + " id=" + order.getId());
+        }
+
         List<OrderDto> result = orders.stream()
-                .map(o -> new OrderDto(o)).collect(toList());
+                .map(o -> new OrderDto(o))
+                .collect(toList());
         return result;
     }
-
 
     @Data
     static class OrderDto {

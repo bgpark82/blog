@@ -85,4 +85,33 @@ public class OrderRepository {
                 " join fetch o.delivery d", Order.class) .getResultList();
     }
 
+    public List<Order> findAllWithItem() {
+        /**
+         * distinct
+         * - DB의 distinct
+         * - 하지만 줄이 완전히 같아야 DISTINCT가 가능하다
+         * - 그래서 이 Distinct는 작동이 안된다
+         * - JPA에서 자체적으로 order가 같은 id값이면 중복을 제거 해준다
+         * - 쿼리 한방으로 다 가져올 수 있다
+         * - 근데 XToOne의 패치조인과 같은거 아닌가?
+         * - 단점이 있다!!
+         * - 페이징이 안된다!!
+         */
+        return em.createQuery("select distinct o from Order o" +
+        " join fetch o.member m" +
+        " join fetch o.delivery d" +
+        " join fetch o.orderItems oi" +
+        " join fetch oi.item i", Order.class)
+                // warning을 내면서 실행이 되지 않는다
+                // fetch 썼는데 페이징 쿼리가 들어갔다
+                // 메모리에서 페이징 처리 할 거다 라는 에러
+                // 데터가 만개가 있었으면 메모리에 만개 다 퍼올리고 페이징 처리한다 => 매우 위험하다!!
+                // 조인하는 순간 order의 기준 자체가 틀어진다
+                // 페이징하면 복수 행인 데이터를 잘라서 가져와야 되는데 어떤 순서로 가져와야 할지 모른다
+                // 컬렉션 패치조인은 하나만 사용가능하다
+                // 왜냐면 N + N + 1해버리니까
+//                .setFirstResult(1)
+//                .setMaxResults(100)
+            .getResultList();
+    }
 }
