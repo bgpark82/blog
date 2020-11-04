@@ -85,6 +85,16 @@ public class OrderRepository {
                 " join fetch o.delivery d", Order.class) .getResultList();
     }
 
+    // 객체를 한방 쿼리로 가져오고 싶을 때
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery("select o from Order o" +
+                " join fetch o.member m" +
+                " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
     public List<Order> findAllWithItem() {
         /**
          * distinct
