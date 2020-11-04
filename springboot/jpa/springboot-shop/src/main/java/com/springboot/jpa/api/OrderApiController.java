@@ -1,14 +1,20 @@
 package com.springboot.jpa.api;
 
 
+import com.springboot.jpa.domain.Address;
 import com.springboot.jpa.domain.Order;
 import com.springboot.jpa.domain.OrderItem;
+import com.springboot.jpa.domain.OrderStatus;
 import com.springboot.jpa.repository.OrderRepository;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -36,15 +42,62 @@ public class OrderApiController {
      * V1. 엔티티 직접 노출
      * - Hibernate5Module 모듈 등록, LAZY=null 처리 * - 양방향 관계 문제 발생 -> @JsonIgnore
      */
-    @GetMapping("/api/v1/orders")
-    public List<Order> ordersV1() {
-        List<Order> all = orderRepository.findAll();
-        for (Order order : all) {
-            order.getMember().getName(); //Lazy 강제 초기화
-            order.getDelivery().getAddress(); //Lazy 강제 초기환
-            List<OrderItem> orderItems = order.getOrderItems();
-            orderItems.stream().forEach(o -> o.getItem().getName());//Lazy 강제 초기화
+//    @GetMapping("/api/v1/orders")
+//    public List<Order> ordersV1() {
+//        List<Order> all = orderRepository.findAll();
+//        for (Order order : all) {
+//            order.getMember().getName(); //Lazy 강제 초기화
+//            order.getDelivery().getAddress(); //Lazy 강제 초기환
+//            List<OrderItem> orderItems = order.getOrderItems();
+//            orderItems.stream().forEach(o -> o.getItem().getName());//Lazy 강제 초기화
+//        }
+//        return all;
+//    }
+
+    @GetMapping("/api/v2/orders")
+    public List<OrderDto> ordersV2() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderDto> result = orders.stream()
+                .map(o -> new OrderDto(o)).collect(toList());
+        return result;
+    }
+
+
+    @Data
+    static class OrderDto {
+        private Long orderId;
+        private String name;
+        private LocalDateTime orderDate; //주문시간 private OrderStatus orderStatus;
+        private Address address;
+        private List<OrderItemDto> orderItems;
+        private OrderStatus orderStatus;
+
+        // Dto 안에 완전히 엔티티를 없애야 한다
+        // Dto는 완전히 Dto가 되어야 한다
+        // 여전히 N+1 문제가 발생한다ㅜ
+        public OrderDto(Order order) {
+            orderId = order.getId();
+            name = order.getMember().getName();
+            orderDate = order.getOrderDate();
+            orderStatus = order.getStatus();
+            address = order.getDelivery().getAddress();
+            // OrderItemDto : OrderItem을 매핑한 Dto
+            orderItems = order.getOrderItems().stream()
+                    .map(orderItem -> new OrderItemDto(orderItem))
+                    .collect(toList());
         }
-        return all;
+    }
+
+    @Data
+    static class OrderItemDto {
+        private String itemName;    //상품명
+        private int orderPrice;     //주문가격
+        private int count;          //주문 수량
+
+        public OrderItemDto(OrderItem orderItem) {
+            itemName = orderItem.getItem().getName();
+            orderPrice = orderItem.getOrderPrice();
+            count = orderItem.getCount();
+        }
     }
 }
