@@ -4,6 +4,7 @@ import com.springboot.jpa.domain.Member;
 import com.springboot.jpa.domain.Order;
 import lombok.RequiredArgsConstructor;
 
+import org.hibernate.annotations.BatchSize;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 

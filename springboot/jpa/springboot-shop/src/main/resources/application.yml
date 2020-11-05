@@ -13,15 +13,16 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
 server:
   port: 8081
+
 
 # 옵션 추가
 # in 쿼리의 개수
 # 미리 땡겨오는 개수
 # 만약 1이면 총 데이터가 2개일 때, DB에 두번 호출
 # 만약 10이면 총 데이터가 100개일 때, DB에 10번 호출
-  jpa:
-    properties:
-      hibernate:
-        default_batch_fetch_size: 1000
