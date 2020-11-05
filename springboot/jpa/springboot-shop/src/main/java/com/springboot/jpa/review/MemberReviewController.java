@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -87,6 +89,41 @@ public class MemberReviewController {
     @AllArgsConstructor
     static class UpdateMemberResponse {
         private Long id;
+        private String name;
+    }
+
+    /**
+     * 1. 회원조회 : 응답값으로 엔티티 노출
+     * - 엔티티의 모든 값이 노출된다
+     * - 응답 스펙을 맞추기 위해 엔티티 로직에 추가해야한다. (@JsonIgnore)
+     * - 엔티티가 변경되면 API 스펙이 변한다
+     */
+    @GetMapping("/review/v1/members")
+    public List<Member> memberV1() {
+        return memberService.findMembers();
+    }
+
+    /**
+     * 2. 회원조회 : 응답값으로 Dto 사용
+     */
+    @GetMapping("/review/v2/members")
+    public MemberReviewController.Result memberV2() {
+        List<Member> findMembers = memberService.findMembers();
+        List<MemberReviewController.MemberDto> collect = findMembers.stream()
+                .map(m -> new MemberReviewController.MemberDto(m.getName()))
+                .collect(Collectors.toList());
+        return new MemberReviewController.Result(collect);
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MemberDto {
         private String name;
     }
 }
