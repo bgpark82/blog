@@ -1,12 +1,12 @@
 package com.springboot.jpa.review;
 
+import com.springboot.jpa.api.MemberApiController;
 import com.springboot.jpa.domain.Member;
 import com.springboot.jpa.service.MemberService;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -61,6 +61,32 @@ public class MemberReviewController {
         private String name;
     }
 
+    /**
+     * 1. 회원수정 : 변경감지를 통한 수정
+     */
+    @PutMapping("/review/v2/members/{id}")
+    public MemberReviewController.UpdateMemberResponse updateMemberV2(
+            @PathVariable Long id,
+            @RequestBody @Valid MemberReviewController.UpdateMemberRequest request) {
 
+        /**
+         * 커맨드와 쿼리를 분리
+         * 유지보수에 좋다
+         */
+        memberService.update(id, request.getName());
+        Member findMember = memberService.findOne(id);
+        return new MemberReviewController.UpdateMemberResponse(findMember.getId(), findMember.getName());
+    }
 
+    @Data
+    static class UpdateMemberRequest {
+        private String name;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class UpdateMemberResponse {
+        private Long id;
+        private String name;
+    }
 }

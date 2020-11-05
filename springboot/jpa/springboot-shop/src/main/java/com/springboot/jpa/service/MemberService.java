@@ -46,13 +46,13 @@ public class MemberService {
 
     /**
      * 커맨드와 쿼리를 철저하게 분리해야 한다
-     * 커맨드는 UPDAte만 하고 끝나야 하는데 Member를 리턴해버리면 MEMBER를 조회하게 된 꼴이된다
-     * @param id
-     * @param name
-     * @return
+     * 커맨드는 update만 하고 끝나야 하는데 Member를 리턴해버리면 Member를 조회하게 된 꼴이된다
      */
     @Transactional
     public void update(Long id, String name) {
+        /**
+         * 변경감지 사용
+         */
         Member member = memberRepository.findOne(id);
         member.setName(name);
 
