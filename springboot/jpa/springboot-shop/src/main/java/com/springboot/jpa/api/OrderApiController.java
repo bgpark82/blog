@@ -88,8 +88,8 @@ public class OrderApiController {
     @GetMapping("/api/v3.1/orders")
     public List<OrderDto> ordersV3Paging(
             @RequestParam(value = "offset",defaultValue = "0") int offset,
-            @RequestParam(value = "limit", defaultValue= "100") int limit) {
-        // 1. ToOne을 Fetch로 먼저 호
+            @RequestParam(value = "limit", defaultValue= "1") int limit) {
+        // 1. ToOne을 Fetch로 먼저 호출
         List<Order> orders = orderRepository.findAllWithMemberDelivery(offset, limit);
 
         // 같은 객체가 반복된다

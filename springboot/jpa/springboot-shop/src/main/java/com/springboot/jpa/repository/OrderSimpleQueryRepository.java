@@ -29,7 +29,7 @@ public class OrderSimpleQueryRepository {
         // fetch 조인과 똑같지만 뭔하는 컬럼을 가져올 수 있다.
         // 트레이드 오프가 있다
         // 재사용성은 없다 => Repository가 API 스펙을 따라가 버렸네
-        return em.createQuery("select new  com.springboot.jpa.repository.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
+        return em.createQuery("select new com.springboot.jpa.repository.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
                 " from Order o" +
                 " join o.member m" +
                 " join o.delivery d", OrderSimpleQueryDto.class)
