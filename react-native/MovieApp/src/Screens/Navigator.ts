@@ -17,9 +17,11 @@ const MovieNavigator = createStackNavigator({
 
 // 로그인 여부에 따라 화면을 Switch
 // 로그인 네비게이션과 영화 네비게이션을 createSwitchNavigator를 이용해 로그인 여부에 따라 맞는 화면 표시
-// 기본 화면으로 CheckLogin 사용
-// 로그인 하지 않으면 Login Navigator
-// 로그인 했다면 MovieNavigator
+
+// Stacks
+// 1. 기본 화면으로 CheckLogin 사용
+// 2. 로그인 하지 않으면 Login Navigator
+// 3. 로그인 했다면 MovieNavigator
 const AppNavigator = createSwitchNavigator(
   {
     CheckLogin,
