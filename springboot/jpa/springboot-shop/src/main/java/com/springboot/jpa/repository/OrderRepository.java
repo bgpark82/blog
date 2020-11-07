@@ -4,6 +4,7 @@ import com.springboot.jpa.domain.Member;
 import com.springboot.jpa.domain.Order;
 import lombok.RequiredArgsConstructor;
 
+import org.hibernate.annotations.BatchSize;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -28,6 +29,10 @@ public class OrderRepository {
     }
 
 
+    public List<Order> findAll() {
+        return em.createQuery("select o from Order o", Order.class)
+                .getResultList();
+    }
 
     /**
      * 검색 로직
