@@ -40,6 +40,18 @@ public class DataSourceConfig {
                 .build();
     }
 
+    /**
+     * 생성된 MasterDataSource와 SlaveDataSource를 DataSourceMap에 저장
+     * - "master":MasterDataSource
+     * - "slave":SlaveDataSource
+     * DataSourceMap을 RoutingDataSource에 저장
+     * defaultTargetDataSource는 masterDataSource
+     *
+     * @param masterDataSource
+     * @param slaveDataSource
+     * @return ReplicationRoutingDataSource
+     * @see ReplicationRoutingDataSource#determineCurrentLookupKey
+     */
     @Bean
     public DataSource routingDataSource(@Qualifier("masterDataSource") DataSource masterDataSource,
                                         @Qualifier("slaveDataSource") DataSource slaveDataSource) {
@@ -54,6 +66,11 @@ public class DataSourceConfig {
         return routingDataSource;
     }
 
+    /**
+     * 앞서 MasterDataSource, SlaveDataSource를 가진 RoutingDataSource(DataSource)를 LazyConnectionDataSource에 등록
+     * @param routingDataSource
+     * @return
+     */
     @Primary
     @Bean
     public DataSource dataSource(@Qualifier("routingDataSource") DataSource routingDataSource) {
