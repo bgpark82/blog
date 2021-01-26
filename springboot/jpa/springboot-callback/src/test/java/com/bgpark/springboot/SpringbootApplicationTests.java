@@ -1,13 +1,13 @@
-package com.bgpark.springbootoauth;
+package com.bgpark.springboot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringbootOauthApplicationTests {
+class SpringbootApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+	}
 
 }
