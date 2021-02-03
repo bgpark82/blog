@@ -1,0 +1,15 @@
+body {
+    margin: 0;
+}
+.container {
+    max-width: 1000px;
+    background-color: lightblue;
+    margin: 0 auto;
+}
+
+.bg {
+    width: 100%;
+    padding-top: 50%;
+    background: url("favicon.png") no-repeat center;
+    background-size: contain;
+}

@@ -1,0 +1,17 @@
+.square {
+    border: 1px solid #333;
+}
+
+/* 정사각형 */
+.square.two {
+    max-width: 800px;
+}
+
+.square.two::after {
+    content: "";
+    display: block;
+    /* 정사각형 */
+    /* padding-top: 100%; */
+    /* ratio 적용 */
+    padding-top: calc(100% / (16 / 9));
+}

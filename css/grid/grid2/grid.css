@@ -1,0 +1,48 @@
+img {
+    width: 4rem;
+}
+.item:nth-child(odd) {
+    background: palegoldenrod;
+}
+
+.item:nth-child(even) {
+    background: palevioletred;
+}
+
+.container {
+    display: grid;
+
+    /* 1. 가로, 세로 */
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(10em, auto);
+
+    /* 2. 정렬 */
+    /* justify-items: center; */
+    /* align-items: start; */
+
+    grid-gap: 1rem;
+}
+
+/* 2. 각각 정렬 */
+.item:nth-child(5) {
+    justify-self: center;
+    align-items: center;
+}
+
+.item:nth-child(1) {
+    /* 제일 왼쪽부터 축번호 카운팅 */
+    /* 1/4 : 축 1번부터 4번까지 채우기*/
+    grid-column: 1/4;
+}
+
+.item:nth-child(4) {
+    /* 제일 왼쪽부터 축번호 카운팅 */
+    /* 2/4 : 행 2번부터 4번까지 채우기*/
+    grid-row: 2/4;
+    grid-column: 3;
+}
+
+.item:nth-child(9) {
+    grid-row: 3/5;
+    grid-column: 3;
+}

@@ -1,0 +1,46 @@
+img {
+    width: 3rem;
+}
+.container .item:nth-child(odd) {
+    background: palegoldenrod;
+}
+.container .item:nth-child(even) {
+    background: peachpuff;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.item {
+    /*
+        auto : 여백을 flex-grow 비율로 나눠가짐
+        0: 전체를 flex-grow 비율로 나눠가짐, 그냥 0으로 둬라
+    */
+    /* flex-basis: 0; */
+}
+
+.item:nth-child(1) {
+    /* 전체 뷰포트에서 div의 전체 width를 제외한 '여백'을 아래 비율로 나눠 가진다 */
+    /* flex-grow: 1; */
+    /* flex를 사용하면 flex-basis는 그냥 0이 된다, 걍 flex 써라;*/
+    flex: 1;
+    /* order: 2; */
+    /* align-self: start; */
+}
+.item:nth-child(2) {
+    /* 전체 뷰포트에서 div의 전체 width를 제외한 '여백'을 아래 비율로 나눠 가진다 */
+    /* flex-grow: 2; */
+    flex: 2;
+    /* order: 3; */
+    /* align-self: center; */
+}
+.item:nth-child(3) {
+    /* 전체 뷰포트에서 div의 전체 width를 제외한 '여백'을 아래 비율로 나눠 가진다 */
+    /* flex-grow: 1; */
+    flex: 1;
+    /* order: 1; */
+    /* align-self: end; */
+}
