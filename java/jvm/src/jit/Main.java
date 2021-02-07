@@ -1,0 +1,19 @@
+package jit;
+
+import java.util.Date;
+
+public class Main {
+
+	public static void main(String[] args) throws InterruptedException {
+		Date start = new Date();
+//		Thread.sleep(20000);
+//		System.out.println("starting the work...");
+		PrimeNumbers primeNumbers = new PrimeNumbers();
+		Integer max = Integer.parseInt(args[0]);
+		primeNumbers.generateNumbers(max);
+
+		Date end = new Date();
+		System.out.println(end.getTime() - start.getTime() + "ms");
+	}
+
+}
