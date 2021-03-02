@@ -1,13 +1,16 @@
 package com.springboot.jpa.domain;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -20,17 +23,22 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    /*
+    /**
      * 항상 Many인 쪽이 FK를 가진다
+     * Many가 FK를 가지기 때문이다
+     * Lazy: Order를 조회시 member를 조회할 때는 Lazy하게 조회한다
      */
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
+    /**
+     * cascadeType.ALL : Order가 삭제될 때 하위 항목인 OrderItem도 삭제되어야 한다
+     */
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    /*
+    /**
      * 1대1 매핑에도 연관관계 주인은 항상 FK를 가지는 녀석
      * XToOne은 기본이 EAGER
      */
@@ -69,11 +77,11 @@ public class Order {
      * 생성 메서드
      * 생성할 때 createOrder 메소드만 바꾸면 된다
      */
-    //==생성 메서드==//
     public static Order createOrder(Member member, Delivery delivery,  OrderItem... orderItems) {
         Order order = new Order();
         order.setMember(member);
         order.setDelivery(delivery);
+
         for (OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);
         }
@@ -95,7 +103,6 @@ public class Order {
         }
     }
 
-    //==조회 로직==//
     /**전체 주문 가격 조회*/
     public int getTotalPrice() {
         int totalPrice = orderItems.stream()

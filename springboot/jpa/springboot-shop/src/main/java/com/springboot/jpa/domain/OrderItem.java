@@ -9,7 +9,7 @@ import static javax.persistence.FetchType.*;
 
 /**
  * 외부 로직에서 NEW 생성자로 생성하지 못하도록
- * 이미 createOrderItem이라는 생성 로직이 있으므로 기본생성자를 막ㅏ 놓ㄴ는다
+ * 이미 createOrderItem이라는 생성 로직이 있으므로 기본생성자를 막아 놓는다
  */
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -29,10 +29,15 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    private int orderPrice; // 주문 가격
-    private int count; // 주문 수량
+    // 주문 가격
+    private int orderPrice;
 
-    //== 생성 메서드 ==//
+    // 주문 수량
+    private int count;
+
+    /**
+     * 생성 매서드
+     */
     public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
         OrderItem orderItem = new OrderItem();
         orderItem.setItem(item);
@@ -44,7 +49,9 @@ public class OrderItem {
         return orderItem;
     }
 
-    //== 비즈니스 로직 ==/.
+    /**
+     * 비즈니스 로직
+     */
     public void cancel() {
         // item에서 원래 재고 수량 원복
         getItem().addStock(count);

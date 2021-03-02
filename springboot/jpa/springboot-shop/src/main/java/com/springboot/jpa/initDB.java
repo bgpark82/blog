@@ -20,7 +20,8 @@ public class initDB {
     @PostConstruct
     public void init() {
         initService.dbInit1();
-        initService.dbInit2(); }
+        initService.dbInit2();
+    }
 
     @Component
     @Transactional
@@ -69,6 +70,7 @@ public class initDB {
             book.setStockQuantity(stockQuantity);
             return book;
         }
+
         private Delivery createDelivery(Member member) {
             Delivery delivery = new Delivery();
             delivery.setAddress(member.getAddress());

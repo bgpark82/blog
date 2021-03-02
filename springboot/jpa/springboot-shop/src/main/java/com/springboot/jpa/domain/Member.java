@@ -1,6 +1,5 @@
 package com.springboot.jpa.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,7 +33,7 @@ public class Member {
     @Column(unique = true)
     private String name;
 
-    /*
+    /**
      * @Embeddable 타입이라는 것을 명시하여야 한다.
      * 둘중 하나만 있어도 되지만 둘 다 명시하는 것이 좋다
      */
@@ -42,10 +41,10 @@ public class Member {
     private Address address;
 
     /**
-     * mappedBy : order에 의해 매핑되었을 뿐이다.
+     * mappedBy : order에 의해 매핑되었을 뿐이다. 조회를 위해 양방향 매핑으로 사용
      * JsonIgnore : 순수한 Member 데이터만 보내기 위해, 좋은 방법 아님!
      */
-//    @JsonIgnore
+    // @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<Order>();
 }

@@ -1,6 +1,5 @@
 package com.springboot.jpa.review;
 
-import com.springboot.jpa.api.MemberApiController;
 import com.springboot.jpa.domain.Member;
 import com.springboot.jpa.service.MemberService;
 import lombok.AllArgsConstructor;
