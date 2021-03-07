@@ -47,6 +47,9 @@ dependencies {
     // querydsl
     compile("com.querydsl:querydsl-jpa")            // querydsl
     compile("com.querydsl:querydsl-apt")            // QClass 생성
+
+    // elasticsearch
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 }
 
 test {
