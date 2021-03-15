@@ -1,9 +1,6 @@
 package com.bgpark.quadkey.domain.place;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -12,7 +9,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = "travel", type = "places")
+@Document(indexName = "travel_v6", type = "places")
+@ToString
 public class PlaceDocument {
 
     @Id
