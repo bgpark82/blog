@@ -19,7 +19,7 @@ public class PlaceController {
     }
 
     @PostMapping("/places")
-    public ResponseEntity findPlace(@RequestBody  PlaceDto.Req request) {
+    public ResponseEntity findPlace(@RequestBody PlaceDto.Req request) {
         placeRepository.save(request.toEntity());
         return ResponseEntity.created(URI.create(String.format("/place/", request.getId()))).build();
     }
