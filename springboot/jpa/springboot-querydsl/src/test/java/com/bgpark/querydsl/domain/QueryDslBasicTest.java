@@ -2,6 +2,7 @@ package com.bgpark.querydsl.domain;
 
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,13 +15,14 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static com.bgpark.querydsl.domain.QMember.member;
+import static com.bgpark.querydsl.domain.QTeam.team;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@DisplayName("queryDsl 관련 테스트")
+@DisplayName("QueryDsl 기본 문법 테스트")
 @SpringBootTest
 @Transactional
-class MemberTest {
+class QueryDslBasicTest {
 
     @PersistenceContext
     private EntityManager em;
@@ -207,7 +209,7 @@ class MemberTest {
         assertThat(members.get(0).getUsername()).isEqualTo("member2");
     }
 
-    @DisplayName("페이징 시, 전체 조회수를 반환 한다")
+    @DisplayName("offset, limit, fetchResult : 페이징 시, 전체 조회수를 반환 한다")
     @Test
     void pagingResult() {
         QueryResults<Member> results = factory.select(member)
@@ -220,5 +222,40 @@ class MemberTest {
         assertThat(results.getOffset()).isEqualTo(1);
         assertThat(results.getLimit()).isEqualTo(2);
         assertThat(results.getResults().size()).isEqualTo(2);
+    }
+
+    @DisplayName("count, sum, avg, max, min : 집합 함수를 사용한다")
+    @Test
+    public void aggregation() {
+        List<Tuple> result = factory
+                .select(member.age.max(),
+                        member.age.min(),
+                        member.age.sum(),
+                        member.age.avg(),
+                        member.count())
+                .from(member).fetch();
+
+        Tuple tuple = result.get(0);
+        // tuple.get(column expression)
+        assertThat(tuple.get(member.age.max())).isEqualTo(40);
+        assertThat(tuple.get(member.age.min())).isEqualTo(10);
+        assertThat(tuple.get(member.age.sum())).isEqualTo(100);
+        assertThat(tuple.get(member.age.avg())).isEqualTo(25);
+        assertThat(tuple.get(member.count())).isEqualTo(4);
+    }
+
+    @DisplayName("group by : 그룹 함수를 사용한다")
+    @Test
+    public void groupBy() {
+        List<Tuple> result = factory
+                .select(team.name, member.age.sum())
+                .from(member)
+                .join(member.team, team) // 순서 중요
+                .groupBy(team.name)
+                .having(member.age.sum().loe(30))
+                .fetch();
+
+        assertThat(result.get(0).get(team.name)).isEqualTo("teamA");
+        assertThat(result.get(0).get(member.age.sum())).isEqualTo(30);
     }
 }
