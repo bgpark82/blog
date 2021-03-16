@@ -3,11 +3,13 @@ package com.bgpark.querydsl.domain;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @SpringBootTest
+@Transactional
 public class BaseTest {
 
     @PersistenceContext

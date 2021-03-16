@@ -16,8 +16,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DisplayName("QueryDsl 기본 문법 테스트")
-@SpringBootTest
-@Transactional
 class QueryDslBasicTest extends BaseTest{
 
     @DisplayName("기본 queryDsl 테스트한다")
