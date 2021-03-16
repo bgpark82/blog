@@ -31,7 +31,6 @@ public class PlaceDocumentQueryImpl implements PlaceDocumentQuery {
         root.filter(isDeleted);
 
         if(isPoint(search)) {
-
             GeoDistanceQueryBuilder geoQueryBuilder = QueryBuilders
                     .geoDistanceQuery(LOCATION)
                     .point(search.getLat(), search.getLon())
