@@ -16,8 +16,8 @@ import static com.bgpark.querydsl.domain.QTeam.team;
 import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@DisplayName("QueryDsl 조인 관련 테스트")
-public class QueryDslJoinTest extends BaseTest{
+@DisplayName("QueryDsl 단순 조인 관련 테스트")
+public class QueryDslSimpleJoinTest extends BaseTest{
 
     @PersistenceUnit
     EntityManagerFactory emf;
