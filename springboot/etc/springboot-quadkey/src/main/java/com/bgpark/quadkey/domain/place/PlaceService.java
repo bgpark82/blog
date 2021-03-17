@@ -13,7 +13,7 @@ public class PlaceService {
 
     private final PlaceDocumentRepository placeDocumentRepository;
 
-    public Object search(PlaceObj.Search search) {
+    public List<PlaceDocument> search(PlaceObj.Search search) {
         List<PlaceDocument> places = placeDocumentRepository.findBySearch(search);
         return places.stream()
                 .map(setDistance(search))

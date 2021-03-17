@@ -17,7 +17,7 @@ public class PlaceController {
 
     @GetMapping("/places/find")
     public ResponseEntity<List<PlaceDocument>> findPlace(PlaceObj.Search request) {
-        List<PlaceDocument> places = placeRepository.findBySearch(request);
+        List<PlaceDocument> places = placeService.search(request);
         return ResponseEntity.ok(places);
     }
 
