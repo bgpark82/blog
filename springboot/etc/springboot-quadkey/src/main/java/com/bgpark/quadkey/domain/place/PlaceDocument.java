@@ -6,6 +6,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.GeoPointField;
 
+import java.util.Date;
+import java.util.Set;
+
 
 @Builder
 @Getter
@@ -28,6 +31,25 @@ public class PlaceDocument {
 
     @GeoPointField
     private LatLon location;
+
+    private Double rating;
+
+    private String name;
+    private String url;
+    private String original_name;
+    private String name_suffix;
+    private String marker;
+    private String thumbnail_url;
+    private Set<Category> categories;
+    private Date createdAt;
+    private Date modifiedAt;
+    private String address;
+    private String img_url;
+
+    public PlaceDocument(String id, String quadkey) {
+        this.id = id;
+        this.quadkey = quadkey;
+    }
 
     public PlaceDocument distanceTo(double lat, double lon) {
         distance = GeoUtils.distance(location, new LatLon(lat, lon));

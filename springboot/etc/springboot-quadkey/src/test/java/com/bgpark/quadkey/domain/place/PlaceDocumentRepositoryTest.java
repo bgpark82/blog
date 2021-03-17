@@ -1,26 +1,24 @@
 package com.bgpark.quadkey.domain.place;
 
-import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+@DisplayName("PlaceDocumentRepository 관련 테스트")
 @SpringBootTest
 class PlaceDocumentRepositoryTest {
 
@@ -30,6 +28,7 @@ class PlaceDocumentRepositoryTest {
     @Autowired
     private RestHighLevelClient client;
 
+    @DisplayName("장소를 저장한다")
     @Test
     void elasticsearchTest() {
         PlaceDocument place = PlaceDocument.builder()
@@ -46,6 +45,7 @@ class PlaceDocumentRepositoryTest {
         assertThat(newPlace.getQuadkey()).isEqualTo("123");
     }
 
+    @Disabled("인덱스를 생성하고 setUp에서 삭제")
     @DisplayName("인덱스를 생성한다")
     @Test
     void es_create_index() throws IOException {

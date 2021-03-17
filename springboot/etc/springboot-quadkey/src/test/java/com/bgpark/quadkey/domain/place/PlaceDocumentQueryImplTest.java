@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-@DisplayName("quadkey 관련 테스트")
+@DisplayName("Quadkey 관련 테스트")
 @SpringBootTest
 class PlaceDocumentQueryImplTest {
 
@@ -19,10 +19,11 @@ class PlaceDocumentQueryImplTest {
     @DisplayName("위도와 경로도 장소 목록 조회한다")
     @Test
     void searchPlace() {
-        PlaceObj.Search search = new PlaceObj.Search(null, 41.9027835, 12.4963655, 100.0);
+        PlaceObj.Search search = new PlaceObj.Search(null, 41.9027835, 12.4963655, 100.0, 2, 50);
 
         List<PlaceDocument> places = placeDocumentRepository.findBySearch(search);
 
-        assertThat(places.size()).isEqualTo(10);
+        places.forEach(System.out::println);
+        assertThat(places.size()).isEqualTo(50);
     }
 }

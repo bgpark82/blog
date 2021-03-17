@@ -5,7 +5,10 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 
 import java.util.List;
@@ -26,28 +29,37 @@ public class PlaceDocumentQueryImpl implements PlaceDocumentQuery {
 
     @Override
     public List<PlaceDocument> findBySearch(PlaceObj.Search search) {
+
+        // 1. builder 생성
         final BoolQueryBuilder root = boolQuery();
         final BoolQueryBuilder quadkeyBool = boolQuery();
-        root.filter(isDeleted);
 
-        if(isPoint(search)) {
-            GeoDistanceQueryBuilder geoQueryBuilder = QueryBuilders
-                    .geoDistanceQuery(LOCATION)
-                    .point(search.getLat(), search.getLon())
-                    .distance(search.getKilometer(), KILOMETERS);
-            root.filter(geoQueryBuilder);
-        }
+            // 1-1. filter 추가
+            root.filter(isDeleted);
+            if(isPoint(search)) {
+                GeoDistanceQueryBuilder geoQueryBuilder = QueryBuilders
+                        .geoDistanceQuery(LOCATION)
+                        .point(search.getLat(), search.getLon())
+                        .distance(search.getKilometer(), KILOMETERS);
+                root.filter(geoQueryBuilder);
+            }
 
-        if(search.getQuadkey() != null) {
-            quadkeyBool.should(matchPhrasePrefixQuery(QUADKEY, search.getQuadkey()));
-        }
+            // 1-2. should 조건 추가
+            if(search.getQuadkey() != null) {
+                quadkeyBool.should(matchPhrasePrefixQuery(QUADKEY, search.getQuadkey()));
+            }
 
-        root.must(quadkeyBool);
+            // 1-3. must 조건 추가
+            root.must(quadkeyBool);
 
-        final NativeSearchQueryBuilder searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(root);
+        // 2. query 생성
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(root)
+                .withPageable(search.getPagable())
+                .withSort(SortBuilders.fieldSort("rating").order(SortOrder.DESC))
+                .build();
 
-        return elasticsearchOperations.queryForList(searchQuery.build(), PlaceDocument.class);
+        return elasticsearchOperations.queryForList(searchQuery, PlaceDocument.class);
     }
 
     private boolean isPoint(PlaceObj.Search search) {
