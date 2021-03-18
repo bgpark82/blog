@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 
-@DisplayName("장소 관련 기능 테스트")
+@DisplayName("장소 관련 인수 테스트")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PlaceAcceptanceTest {
 
@@ -35,10 +35,15 @@ class PlaceAcceptanceTest {
     @DisplayName("장소를 호출한다")
     @Test
     void getPlaces() {
-        Map<String, String> body = new HashMap<>();
-        body.put("quadkey","1234");
+        HashMap<String, String> params = new HashMap<>();
+        params.put("quadkey", "4567");
+        params.put("lat", "37.125");
+        params.put("lon", "127.251");
+        params.put("kilometer", "100.0");
+        params.put("page", "1");
+        params.put("size", "10");
 
-        ExtractableResponse<Response> response = 장소_조회_요청(body);
+        ExtractableResponse<Response> response = 장소_조회_요청(params);
 
         장소_조회됨(response);
     }
@@ -63,10 +68,10 @@ class PlaceAcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
-    private ExtractableResponse<Response> 장소_조회_요청(Map<String, String> body) {
+    private ExtractableResponse<Response> 장소_조회_요청(HashMap<String, String>  params) {
         return RestAssured
                 .given().log().all()
-                    .body(body)
+                    .params(params)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
                     .get("/api/v1/places/find")
