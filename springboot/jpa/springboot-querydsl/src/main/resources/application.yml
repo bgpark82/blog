@@ -1,6 +1,5 @@
 server.port: 8081
 
-
 spring.datasource.url: jdbc:h2:mem:testdb
 spring.datasource.driverClassName: org.h2.Driver
 spring.datasource.username: sa
@@ -10,6 +9,8 @@ spring:
   h2:
     console:
       enabled: true
+  profiles:
+    active: local
 
 logging.level.org.hibernate.SQL: debug            # 로그 형식으로 쿼리 보여주기
 spring.jpa.properties.hibernate.format_sql: true  # 압축된 쿼리를 읽기 좋게 포멧

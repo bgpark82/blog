@@ -27,3 +27,5 @@ public class PlaceController {
         return ResponseEntity.created(URI.create(String.format("/place/", request.getId()))).build();
     }
 }
+
+
