@@ -38,3 +38,8 @@ out/
 
 ### Custom ###
 application-db.yml
+
+node_modules
+out
+.next
+.env

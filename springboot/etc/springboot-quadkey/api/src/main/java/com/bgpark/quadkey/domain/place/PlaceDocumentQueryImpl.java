@@ -36,13 +36,13 @@ public class PlaceDocumentQueryImpl implements PlaceDocumentQuery {
 
             // 1-1. filter 추가
             root.filter(isDeleted);
-            if(isPoint(search)) {
-                GeoDistanceQueryBuilder geoQueryBuilder = QueryBuilders
-                        .geoDistanceQuery(LOCATION)
-                        .point(search.getLat(), search.getLon())
-                        .distance(search.getKilometer(), KILOMETERS);
-                root.filter(geoQueryBuilder);
-            }
+//            if(isPoint(search)) {
+//                GeoDistanceQueryBuilder geoQueryBuilder = QueryBuilders
+//                        .geoDistanceQuery(LOCATION)
+//                        .point(search.getLat(), search.getLon())
+//                        .distance(search.getKilometer(), KILOMETERS);
+//                root.filter(geoQueryBuilder);
+//            }
 
             // 1-2. should 조건 추가
             if(search.getQuadkey() != null) {

@@ -45,6 +45,7 @@ class PlaceAcceptanceTest {
 
         ExtractableResponse<Response> response = 장소_조회_요청(params);
 
+        System.out.println(response);
         장소_조회됨(response);
     }
 

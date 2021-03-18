@@ -1,0 +1,31 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "quadkey web",
+  "main": "index.js",
+  "scripts": {
+    "start": "next dev"
+  },
+  "keywords": [
+    "quadkey"
+  ],
+  "author": "bgpark",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^10.0.9",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.1.5",
+    "@emotion/styled": "^11.1.5",
+    "axios": "^0.21.1",
+    "google-map-react": "^2.1.9",
+    "quadkey": "0.0.1"
+  },
+  "proxy": {
+    "/api/v1": {
+      "target": "http://localhost:8081"
+    }
+  }
+}
