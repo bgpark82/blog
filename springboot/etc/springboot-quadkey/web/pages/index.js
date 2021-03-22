@@ -1,32 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { toQuaKey } from "quadkey";
+import React from 'react';
 import GoogleMapReact from "google-map-react";
 import Marker from "../components/Marker";
-import { apiClient } from "../api/api";
+import useQuadkey from "../components/useQuadkey";
 
-function Index(props) {
+function Index() {
 
-    const [ latLon, setLatLon ] = useState({ lat: 59.955413, lon: 30.337844 });
-    const [ level, setLevel ] = useState(11);
-    const [ places, setPlaces ] = useState([]);
-
-    const fetchPlaces = async () => {
-        const {lat, lon} = latLon;
-        const response = await apiClient
-            .get(`/api/v1/places/find?lat=${lat}&lon=${lon}&quadkey=${(toQuaKey(lat, lon, level))}&size=50&page=1&kilometer=100`);
-        setPlaces(response.data);
-    };
-
-    useEffect(() => {
-        fetchPlaces();
-    }, []);
+    const [places, onBoundsChange, onLoadGoogleMap] = useQuadkey();
 
     return (
         <div style={{height: '100vh', width: '100%'}}>
             <GoogleMapReact
                 bootstrapURLKeys={{key: process.env.NEXT_PUBLIC_GOOGLE_API_KEY}}
-                defaultZoom={11}
                 defaultCenter={{lat: 59.95, lng: 30.33}}
+                defaultZoom={11}
+                onChange={onBoundsChange}
+                yesIWantToUseGoogleMapApiInternals
+                onGoogleApiLoaded={({map, maps}) => onLoadGoogleMap(map, maps)}
             >
                 {
                     places.map(place => (
