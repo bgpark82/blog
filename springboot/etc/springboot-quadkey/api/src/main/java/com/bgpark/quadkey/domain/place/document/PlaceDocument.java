@@ -1,5 +1,7 @@
-package com.bgpark.quadkey.domain.place;
+package com.bgpark.quadkey.domain.place.document;
 
+import com.bgpark.quadkey.domain.place.Category;
+import com.bgpark.quadkey.domain.place.LatLon;
 import com.bgpark.quadkey.domain.util.GeoUtils;
 import lombok.*;
 import org.springframework.data.annotation.Id;

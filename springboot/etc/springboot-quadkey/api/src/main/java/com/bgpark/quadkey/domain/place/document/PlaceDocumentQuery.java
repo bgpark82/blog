@@ -1,4 +1,4 @@
-package com.bgpark.quadkey.domain.place;
+package com.bgpark.quadkey.domain.place.document;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
 package com.bgpark.quadkey.domain.place;
 
+import com.bgpark.quadkey.domain.place.document.PlaceDocument;
+import com.bgpark.quadkey.domain.place.document.PlaceDocumentRepository;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;

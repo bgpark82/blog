@@ -1,5 +1,8 @@
 package com.bgpark.quadkey.domain.place;
 
+import com.bgpark.quadkey.domain.place.document.PlaceDocument;
+import com.bgpark.quadkey.domain.place.document.PlaceDocumentRepository;
+import com.bgpark.quadkey.domain.place.document.PlaceObj;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

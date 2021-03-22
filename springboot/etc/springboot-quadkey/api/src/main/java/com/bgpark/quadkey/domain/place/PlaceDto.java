@@ -1,5 +1,6 @@
 package com.bgpark.quadkey.domain.place;
 
+import com.bgpark.quadkey.domain.place.document.PlaceDocument;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

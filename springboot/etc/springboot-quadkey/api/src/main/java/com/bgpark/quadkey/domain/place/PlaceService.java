@@ -1,5 +1,8 @@
 package com.bgpark.quadkey.domain.place;
 
+import com.bgpark.quadkey.domain.place.document.PlaceDocument;
+import com.bgpark.quadkey.domain.place.document.PlaceDocumentRepository;
+import com.bgpark.quadkey.domain.place.document.PlaceObj;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
