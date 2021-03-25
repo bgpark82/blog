@@ -2,6 +2,7 @@ package com.bgpark.reactor.core;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.reactivestreams.Processor;
 import org.reactivestreams.Subscription;
 import reactor.core.Disposable;
 import reactor.core.Disposables;
@@ -11,6 +12,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @DisplayName("Flux와 Mono 관련 테스트")
 public class BasicTest {
@@ -154,5 +156,100 @@ public class BasicTest {
                 .buffer(2)
                 .doOnSubscribe(s -> s.request(2))
                 .subscribe(s -> System.out.println(s));
+    }
+
+    @DisplayName("generate로 동기적으로 Flux를 생성한다")
+    @Test
+    void generate() {
+        Flux<String> flux = Flux.generate(
+                () -> 0,                                                    // 초기 state = 0
+                (state, sink) -> {
+                    sink.next("3 x " + state + " = " + 3 * state);       // 다음으로 무엇을 emit할 지 결정
+                    if (state == 10) sink.complete();                       // 언제 멈출지 결정 (종료)
+                    return state + 1;                                       // 다음 호출에 사용할 새로운 state를 반환
+                });
+
+        flux.subscribe(System.out::println);
+    }
+
+    @DisplayName("generate로 동기적으로 Flux를 생성한다")
+    @Test
+    void generate2() {
+        Flux<String> flux = Flux.generate(
+                AtomicLong::new,                                                    // 초기 state = 0
+                (state, sink) -> {
+                    long i = state.getAndIncrement();
+                    sink.next("3 x " + i + " = " + 3 * i);       // 다음으로 무엇을 emit할 지 결정
+                    if (i == 10) sink.complete();                       // 언제 멈출지 결정 (종료)
+                    return state;                                       // 다음 호출에 사용할 새로운 state를 반환
+                });
+
+        flux.subscribe(System.out::println);
+    }
+
+    @DisplayName("generate로 동기적으로 Flux를 Consumer와 함께 생성한다")
+    @Test
+    void generate3() {
+        Flux<String> flux = Flux.generate(
+                AtomicLong::new,                                                    // 초기 state = 0
+                (state, sink) -> {
+                    long i = state.getAndIncrement();
+                    sink.next("3 x " + i + " = " + 3 * i);       // 다음으로 무엇을 emit할 지 결정
+                    if (i == 10) sink.complete();                       // 언제 멈출지 결정 (종료)
+                    return state;                                       // 다음 호출에 사용할 새로운 state를 반환
+                }, (state) -> System.out.println("state" + state));
+    }
+
+    @DisplayName("create로 비동기, 멀티 스레드 방식으로 Flux를 생성한다")
+    @Test
+    void create1() {
+
+    }
+
+    @DisplayName("push로 비동기, 싱글 스레드 방식으로 Flux를 생성한다")
+    @Test
+    void push() {
+        Flux<String> flux = Flux.push(sink -> {
+
+            new SingleThreadEventListener<String>() {
+                @Override
+                public void onDataChunk(List<String> chunk) {       // event가 싱글 listenr 스레드로 부터 next 메소드를 통해 sink로 push
+                    for (String s : chunk) {
+                        sink.next(s);
+                    }
+                }
+
+                @Override
+                public void processComplete() {                     // 같은 listener 스레드를 통해 complete 이벤트 생성
+                    sink.complete();
+                }
+
+                @Override
+                public void processError(Throwable e) {             // 같은 listener 스레드를 통해 error 이벤트 생성
+                    sink.error(e);
+                }
+            };
+        });
+
+        flux.subscribe(System.out::println);
+    }
+
+    interface SingleThreadEventListener<T> {
+        public void onDataChunk(List<T> chunk) ;
+        public void processComplete() ;
+        public void processError(Throwable e) ;
+    }
+
+    @Test
+    void newThread() throws InterruptedException {
+
+        final Mono<String> mono = Mono.just("hello");  // main 메소드에서 Mono가 생성되었다.
+
+        Thread thread = new Thread(() -> mono
+                .map(msg -> msg + " thread ")
+                .subscribe(v -> System.out.println(v + Thread.currentThread().getName()))); // 하지만 Thread-0에 mono가 subscribe되었다.
+
+        thread.start();
+        thread.join();
     }
 }
