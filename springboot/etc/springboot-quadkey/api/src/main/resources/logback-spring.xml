@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d %green([%thread]) %highlight(%-5level) %magenta([%method]) - %boldWhite(%msg) %n</Pattern>
+        </encoder>
+    </appender >
+
+    <logger name="org.springframework.data.elasticsearch.client.WIRE" level="trace"/>
+
+
+    <root>
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
