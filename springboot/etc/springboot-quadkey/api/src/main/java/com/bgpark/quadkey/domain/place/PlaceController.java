@@ -20,8 +20,13 @@ public class PlaceController {
 
     @GetMapping("/places/find")
     public ResponseEntity<List<PlaceDocument>> findPlace(PlaceObj.Search request) {
+//        CacheControl cacheControl = CacheControl.maxAge(60, TimeUnit.SECONDS)
+//                .noTransform()
+//                .mustRevalidate();
         List<PlaceDocument> places = placeService.search(request);
-        return ResponseEntity.ok(places);
+        return ResponseEntity.ok()
+//                .cacheControl(cacheControl)
+                .body(places);
     }
 
     @PostMapping("/places")

@@ -1,3 +1,14 @@
 spring:
   profiles:
     include: db
+
+server:
+  tomcat:
+    threads:
+      max: 500
+    accesslog:
+      enabled: true
+
+    min-spare-threads: 5
+
+server.http2.enabled: true

@@ -1,6 +1,7 @@
 package com.bgpark.quadkey.domain.place;
 
 import com.bgpark.quadkey.domain.place.document.PlaceDocument;
+import com.bgpark.quadkey.domain.place.document.PlaceObj;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -11,9 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.util.StopWatch;
 
 import java.util.HashMap;
 
+import static com.bgpark.quadkey.domain.place.document.PlaceObj.Search.SortOrder.RATING;
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("장소 관련 인수 테스트")
@@ -63,6 +66,38 @@ class PlaceAcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("장소 요청 테스트")
+    @Test
+    void find() {
+        StopWatch stopWatch = new StopWatch("bgpark");
+
+        PlaceObj.Search request = PlaceObj.Search.builder()
+                .quadkey("031313")
+                .lat(0.0)
+                .lon(0.0)
+                .kilometer(100.0)
+                .minRate(0)
+                .maxRate(10)
+                .page(1)
+                .size(50)
+                .sortOrder(RATING)
+                .build();
+
+        stopWatch.start();
+        ExtractableResponse<Response> response = RestAssured
+                .given().log().all()
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .post("/api/v1/places")
+                .then().log().all().extract();
+
+        stopWatch.stop();
+        System.out.println(response.body());
+        System.out.println(stopWatch.prettyPrint());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
     private void 장소_조회됨(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
@@ -78,4 +113,8 @@ class PlaceAcceptanceTest {
     }
 
 
+
 }
+
+
+
