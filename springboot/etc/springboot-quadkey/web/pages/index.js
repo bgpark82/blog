@@ -24,6 +24,7 @@ function Index() {
                             lat={place.location.lat}
                             lng={place.location.lon}
                             text={place.name}
+                            place={place}
                         />
                     ))
                 }

@@ -7,7 +7,8 @@ function useQuadkey() {
 
     const onBoundsChange = useCallback(({ center, zoom, bounds, ...other }) => {
         if(!window.map && !window.maps) return;
-
+        if(zoom < 8) return;
+        
         Promise.all(getQuadkeys(bounds, zoom)
             .map(quadkey => fetchPlaces(quadkey)))
             .then(place => setPlaces(place.flat()));

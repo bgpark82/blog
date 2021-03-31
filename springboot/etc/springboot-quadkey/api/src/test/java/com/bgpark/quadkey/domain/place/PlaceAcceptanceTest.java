@@ -50,6 +50,23 @@ class PlaceAcceptanceTest {
         장소_조회됨(response);
     }
 
+    @DisplayName("장소를 비동기적으로 호출한다")
+    @Test
+    void findReactivePlaces() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("quadkey", "031313");
+        params.put("lat", "37.125");
+        params.put("lon", "127.251");
+        params.put("kilometer", "100.0");
+        params.put("page", "1");
+        params.put("size", "10");
+
+        ExtractableResponse<Response> response = 장소_비동기_조회_요청(params);
+
+        System.out.println(response);
+        장소_조회됨(response);
+    }
+
     @DisplayName("장소를 저장한다")
     @Test
     void save() throws Exception {
@@ -112,7 +129,15 @@ class PlaceAcceptanceTest {
                 .then().log().all().extract();
     }
 
-
+    private ExtractableResponse<Response> 장소_비동기_조회_요청(HashMap<String, String>  params) {
+        return RestAssured
+                .given().log().all()
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get("/api/v2/places/find")
+                .then().log().all().extract();
+    }
 
 }
 
