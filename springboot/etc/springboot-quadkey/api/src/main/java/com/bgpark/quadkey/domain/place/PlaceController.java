@@ -28,6 +28,7 @@ public class PlaceController {
         CacheControl cacheControl = CacheControl.maxAge(60, TimeUnit.SECONDS)
                 .noTransform()
                 .mustRevalidate();
+
         List<PlaceDocument> places = placeService.search(request);
         return ResponseEntity.ok()
                 .cacheControl(cacheControl)
