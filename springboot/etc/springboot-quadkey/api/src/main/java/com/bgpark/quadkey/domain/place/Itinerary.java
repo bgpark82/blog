@@ -1,0 +1,14 @@
+package com.bgpark.quadkey.domain.place;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Itinerary {
+
+    private Long id;
+    private String name;
+}
