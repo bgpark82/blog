@@ -2,9 +2,14 @@ package com.bgpark.quadkey.domain.place.document;
 
 import com.bgpark.quadkey.domain.place.Category;
 import lombok.RequiredArgsConstructor;
+import org.elasticsearch.action.fieldcaps.FieldCapabilitiesRequestBuilder;
+import org.elasticsearch.action.search.MultiSearchRequest;
+import org.elasticsearch.action.search.MultiSearchRequestBuilder;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 
@@ -29,6 +34,8 @@ public class PlaceDocumentQueryImpl implements PlaceDocumentQuery {
         final BoolQueryBuilder rootBool = boolQuery();
         final BoolQueryBuilder categoryBool = boolQuery();
         final BoolQueryBuilder quadkeyBool = boolQuery();
+
+
 
         if (search.getMinRate() != null && search.getMaxRate() != null) {
             rootBool.filter(QueryBuilders
@@ -56,6 +63,7 @@ public class PlaceDocumentQueryImpl implements PlaceDocumentQuery {
         NativeSearchQueryBuilder searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(rootBool)
                 .withSort(search.getSort())
+                .withFields("thumbnail_url", "createdAt", "id", "quadkey", "location.*", "rating")
                 .withPageable(search.getPagable());
 
         return elasticsearchOperations.queryForList(searchQuery.build(), PlaceDocument.class);

@@ -1,5 +1,6 @@
-package com.bgpark.quadkey.domain.place;
+package com.bgpark.quadkey.domain.place.application;
 
+import com.bgpark.quadkey.domain.place.Category;
 import com.bgpark.quadkey.domain.place.document.PlaceDocument;
 import com.bgpark.quadkey.domain.place.document.PlaceObj;
 import lombok.RequiredArgsConstructor;

@@ -13,7 +13,7 @@ import org.springframework.util.StopWatch;
 @Slf4j
 public class LoggingAspect {
 
-    @Around("execution(* com.bgpark.quadkey.domain.place.PlaceController.*(..))")
+    @Around("execution(* com.bgpark.quadkey.domain.place.ui.PlaceController.*(..))")
     public Object logAll(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { getQuadkeys } from "../utils/quadkey";
-import { fetchPlaces } from "../api/api";
+import { fetchMultiPlaces, fetchPlaces } from "../api/api";
 
 function useQuadkey() {
     const [ places, setPlaces ] = useState([]);
@@ -8,10 +8,13 @@ function useQuadkey() {
     const onBoundsChange = useCallback(({ center, zoom, bounds, ...other }) => {
         if(!window.map && !window.maps) return;
         if(zoom < 8) return;
-        
-        Promise.all(getQuadkeys(bounds, zoom)
-            .map(quadkey => fetchPlaces(quadkey)))
+
+        fetchMultiPlaces(getQuadkeys(bounds, zoom))
             .then(place => setPlaces(place.flat()));
+        
+        // Promise.all(getQuadkeys(bounds, zoom)
+        //     .map(quadkey => fetchPlaces(quadkey)))
+        //     .then(place => setPlaces(place.flat()));
     },[]);
 
     const onLoadGoogleMap = useCallback((map, maps) => {

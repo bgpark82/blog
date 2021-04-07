@@ -1,5 +1,6 @@
 package com.bgpark.quadkey.domain.place;
 
+import com.bgpark.quadkey.domain.place.Itinerary;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 

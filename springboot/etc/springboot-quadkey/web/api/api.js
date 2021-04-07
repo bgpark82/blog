@@ -8,7 +8,15 @@ export const apiClient = axios.create({
 export const fetchPlaces = async (quadkey) => {
     console.log(quadkey)
     const response = await apiClient
-        .get(`/api/v2/places/find?lat=0&lon=0&quadkey=${quadkey}&size=10&page=1&kilometer=0`);
+        .get(`/api/v1/places/find?lat=0&lon=0&quadkey=${quadkey}&size=10&page=1&kilometer=0`);
+
+    return response.data;
+};
+
+export const fetchMultiPlaces = async (quadkeys) => {
+    const response = await apiClient
+        .post(`/api/v3/places/find`, quadkeys)
+
 
     return response.data;
 };
