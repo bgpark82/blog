@@ -4,10 +4,12 @@ import com.bgpark.quadkey.domain.place.PlaceDto;
 import com.bgpark.quadkey.domain.place.application.PlaceMultiService;
 import com.bgpark.quadkey.domain.place.application.PlaceReactiveService;
 import com.bgpark.quadkey.domain.place.application.PlaceService;
+import com.bgpark.quadkey.domain.place.application.PlaceSingleService;
 import com.bgpark.quadkey.domain.place.document.PlaceDocument;
 import com.bgpark.quadkey.domain.place.document.PlaceDocumentRepository;
 import com.bgpark.quadkey.domain.place.document.PlaceObj;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,33 +26,35 @@ import java.util.concurrent.TimeUnit;
 public class PlaceController {
 
     private final PlaceService placeService;
+    private final PlaceSingleService placeSingleService;
     private final PlaceReactiveService placeReactiveService;
     private final PlaceMultiService placeMultiService;
     private final PlaceDocumentRepository placeRepository;
 
-//    @Cacheable("place")
+    @Cacheable("place")
     @GetMapping("/v1/places/find")
-    public ResponseEntity<List<PlaceDocument>> findPlace(PlaceObj.Search request) throws InterruptedException {
-        CacheControl cacheControl = CacheControl.maxAge(60, TimeUnit.SECONDS)
+    public ResponseEntity<List<PlaceDocument>> findPlace(PlaceObj.Search request) throws InterruptedException, IOException {
+        CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.DAYS)
                 .noTransform()
                 .mustRevalidate();
 
-        List<PlaceDocument> places = placeService.search(request);
+        List<PlaceDocument> places = placeSingleService.search(request);
         return ResponseEntity.ok()
                 .cacheControl(cacheControl)
                 .body(places);
     }
 
     @GetMapping(value = "/v2/places/find")
-    public ResponseEntity<Flux<PlaceDocument>> findReactivePlace(PlaceObj.Search request) {
-        Flux<PlaceDocument> places = placeReactiveService.findBySearch(request);
-        CacheControl cacheControl = CacheControl.maxAge(60, TimeUnit.SECONDS)
-                .noTransform()
-                .mustRevalidate();
-
-        return ResponseEntity.ok()
-                .cacheControl(cacheControl)
-                .body(places);
+    public Flux<ResponseEntity<PlaceDocument>> findReactivePlace(PlaceObj.Search request) {
+        return placeReactiveService.findBySearch(request)
+                .map(place -> {
+                    CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.DAYS)
+                            .noTransform()
+                            .mustRevalidate();
+                    return ResponseEntity.ok()
+                            .cacheControl(cacheControl)
+                            .body(place);
+                });
     }
 
     @CrossOrigin(value = "http://localhost:3000")

@@ -20,6 +20,8 @@ import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
+
 @Configuration
 public class ElasticsearchConfig {
 
@@ -33,7 +35,11 @@ public class ElasticsearchConfig {
     public RestHighLevelClient client() {
         // client 생성
         return new RestHighLevelClient(
-                RestClient.builder(new HttpHost(host, port, "http")));
+                RestClient.builder(new HttpHost(host, port, "http"))
+                .setRequestConfigCallback(callback -> callback
+                        .setConnectTimeout(1)
+                        .setSocketTimeout(1))
+        );
     }
 
     @Bean

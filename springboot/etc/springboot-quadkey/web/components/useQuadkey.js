@@ -9,12 +9,12 @@ function useQuadkey() {
         if(!window.map && !window.maps) return;
         if(zoom < 8) return;
 
-        fetchMultiPlaces(getQuadkeys(bounds, zoom))
-            .then(place => setPlaces(place.flat()));
-        
-        // Promise.all(getQuadkeys(bounds, zoom)
-        //     .map(quadkey => fetchPlaces(quadkey)))
+        // fetchMultiPlaces(getQuadkeys(bounds, zoom))
         //     .then(place => setPlaces(place.flat()));
+        
+        Promise.all(getQuadkeys(bounds, zoom)
+            .map(quadkey => fetchPlaces(quadkey)))
+            .then(place => setPlaces(place.flat()));
     },[]);
 
     const onLoadGoogleMap = useCallback((map, maps) => {

@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const apiClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_SERVER_URL,
-    timeout: 100000,
+    // timeout: 2000,
 });
 
 export const fetchPlaces = async (quadkey) => {
@@ -16,7 +16,6 @@ export const fetchPlaces = async (quadkey) => {
 export const fetchMultiPlaces = async (quadkeys) => {
     const response = await apiClient
         .post(`/api/v3/places/find`, quadkeys)
-
 
     return response.data;
 };

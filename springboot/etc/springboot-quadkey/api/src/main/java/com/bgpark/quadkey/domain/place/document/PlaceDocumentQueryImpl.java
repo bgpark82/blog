@@ -35,8 +35,6 @@ public class PlaceDocumentQueryImpl implements PlaceDocumentQuery {
         final BoolQueryBuilder categoryBool = boolQuery();
         final BoolQueryBuilder quadkeyBool = boolQuery();
 
-
-
         if (search.getMinRate() != null && search.getMaxRate() != null) {
             rootBool.filter(QueryBuilders
                     .rangeQuery("rating")
@@ -59,6 +57,7 @@ public class PlaceDocumentQueryImpl implements PlaceDocumentQuery {
         rootBool.must(categoryBool);
         rootBool.must(quadkeyBool);
         rootBool.filter(isDeleted);
+
 
         NativeSearchQueryBuilder searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(rootBool)
