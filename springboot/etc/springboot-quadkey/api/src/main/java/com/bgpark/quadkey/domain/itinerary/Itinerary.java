@@ -1,4 +1,4 @@
-package com.bgpark.quadkey.domain.place;
+package com.bgpark.quadkey.domain.itinerary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,4 +11,8 @@ public class Itinerary {
 
     private Long id;
     private String name;
+
+    public Itinerary(String name) {
+        this.name = name;
+    }
 }

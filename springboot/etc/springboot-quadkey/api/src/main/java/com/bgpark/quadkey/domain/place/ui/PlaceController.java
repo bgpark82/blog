@@ -45,16 +45,8 @@ public class PlaceController {
     }
 
     @GetMapping(value = "/v2/places/find")
-    public Flux<ResponseEntity<PlaceDocument>> findReactivePlace(PlaceObj.Search request) {
-        return placeReactiveService.findBySearch(request)
-                .map(place -> {
-                    CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.DAYS)
-                            .noTransform()
-                            .mustRevalidate();
-                    return ResponseEntity.ok()
-                            .cacheControl(cacheControl)
-                            .body(place);
-                });
+    public ResponseEntity<Flux<PlaceDocument>> findReactivePlace(PlaceObj.Search request) {
+        return ResponseEntity.ok(placeReactiveService.findBySearch(request));
     }
 
     @CrossOrigin(value = "http://localhost:3000")

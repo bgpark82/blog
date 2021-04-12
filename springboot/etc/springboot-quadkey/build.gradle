@@ -47,12 +47,25 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.jgrapht:jgrapht-core:1.0.1'
     testImplementation 'io.rest-assured:rest-assured:3.3.0'
+    testImplementation 'io.projectreactor:reactor-test:3.2.3.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+
     // querydsl
     compile("com.querydsl:querydsl-jpa")            // querydsl
     compile("com.querydsl:querydsl-apt")            // QClass 생성
 
     // elasticsearch
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+
+    // caffeine
+    implementation "com.github.ben-manes.caffeine:caffeine"
+
+    // monoCache fluxCache
+    implementation "io.projectreactor.addons:reactor-extra"
 
 
 }

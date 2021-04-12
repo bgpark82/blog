@@ -8,12 +8,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.client.reactive.ReactiveElasticsearchClient;
 import org.springframework.data.elasticsearch.core.ReactiveElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
+import reactor.cache.CacheFlux;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.Signal;
+
+import java.util.List;
+import java.util.logging.Level;
 
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
@@ -23,8 +30,8 @@ import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 @RequiredArgsConstructor
 public class PlaceReactiveService {
 
+    private final CacheManager cacheManager;
     private final ReactiveElasticsearchOperations reactiveElasticsearchOperations;
-    private final ReactiveElasticsearchClient reactiveElasticsearchClient;
 
     private static final String QUADKEY = "quadkey";
     private static final String IS_DELETED = "is_deleted";
@@ -32,6 +39,7 @@ public class PlaceReactiveService {
 
     public Flux<PlaceDocument> findBySearch(PlaceObj.Search search) {
 
+        System.out.println("================>> Cache missed!! <<================");
         final BoolQueryBuilder rootBool = boolQuery();
         final BoolQueryBuilder categoryBool = boolQuery();
         final BoolQueryBuilder quadkeyBool = boolQuery();
@@ -66,7 +74,11 @@ public class PlaceReactiveService {
                 .withSort(search.getSort())
                 .withPageable(pagable);
 
-        return reactiveElasticsearchOperations.find(searchQuery.build(), PlaceDocument.class)
-                .doOnError(throwable -> log.error(throwable.getMessage(), throwable));
+        return CacheFlux.lookup(key -> Mono.justOrEmpty((List<Signal<PlaceDocument>>) cacheManager.getCache("place").get(key)), search.getQuadkey())
+                .onCacheMissResume(reactiveElasticsearchOperations.find(searchQuery.build(), PlaceDocument.class)
+                        .doOnError(throwable -> log.error(throwable.getMessage(), throwable)))
+                .andWriteWith((key, value) -> Mono.fromRunnable(() -> cacheManager.getCache("place").put(key, value)));
     }
+
+
 }

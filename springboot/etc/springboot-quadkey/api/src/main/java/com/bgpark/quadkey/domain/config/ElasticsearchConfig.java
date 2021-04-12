@@ -36,9 +36,9 @@ public class ElasticsearchConfig {
         // client 생성
         return new RestHighLevelClient(
                 RestClient.builder(new HttpHost(host, port, "http"))
-                .setRequestConfigCallback(callback -> callback
-                        .setConnectTimeout(1)
-                        .setSocketTimeout(1))
+//                .setRequestConfigCallback(callback -> callback
+//                        .setConnectTimeout(1)
+//                        .setSocketTimeout(1))
         );
     }
 
