@@ -16,9 +16,13 @@
 - 놀고 있는 CPU가 줄어든다
 - DB, 네트워크 IO 발생 시, 동시에 다른 스레드가 실행될 수 있다
 
-### 문제점
+## 문제점
 - 자원 공유의 문제
     1. Race Condition
     2. Deadlock
     3. Starvation
     4. Nested Monitor Lockout
+  
+### 1. Race Condition
+- **두개의 스레드**가 **하나의 변수**를 **동시에 쓰기** 할 때 발생
+- 하나의 스레드만 변수에 접근하도록 한다 -> synchronized 블록 사용
