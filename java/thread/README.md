@@ -26,3 +26,17 @@
 ### 1. Race Condition
 - **두개의 스레드**가 **하나의 변수**를 **동시에 쓰기** 할 때 발생
 - 하나의 스레드만 변수에 접근하도록 한다 -> synchronized 블록 사용
+
+### 2. Deadlock
+- 서로 다른 스레드가 각각의 lock(자원)을 사용하고 있을 때, 서로 상대방이 사용하고 있는 lock을 사용하려 할 때 발생
+
+Deadlock이 발생하는 4가지 조건
+1. Mutual Exclusion : 한번에 하나의 스레드만 lock(자원)에 접근 가능할 때 (Mutex)
+2. No Preemption : 스레드가 사용할 lock(자원)을 다른 스레드가 선점 할 수 없을 때
+3. Hold And Wait : 스레드가 lock(자원)을 가진 상태에서 다른 스레드의 lock(자원)을 기다릴 때
+4. Circular Wait : 스레드가 다른 스레드가 원하는 lock(자원)을 순서대로 가지고 있을 때
+
+해결방법
+1. Lock Reordering : lock을 하는 순서를 바꾼다
+2. Timeout Backoff : Timeout을 준다
+3. Deadlock Detection : Deadlock을 감지한다
