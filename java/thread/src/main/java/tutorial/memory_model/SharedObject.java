@@ -8,6 +8,7 @@ public class SharedObject {
 
         MyRunnable runnable = new MyRunnable(myObject);
 
+        // 같은 Runnable을 공유한다
         Thread thread1 = new Thread(runnable, "Thread1");
         Thread thread2 = new Thread(runnable, "Thread2");
 
