@@ -2,6 +2,7 @@ package tutorial.memory_model;
 
 class MyRunnable implements Runnable {
 
+    // 지역변수
     private int count = 0;
     private MyObject myObject = null;
 

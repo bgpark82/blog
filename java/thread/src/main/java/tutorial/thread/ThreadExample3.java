@@ -4,7 +4,8 @@ public class ThreadExample3 {
 
     public static void main(String[] args) {
         Thread thread = new Thread(() -> {
-            System.out.println("The thread running");
+            String threadName = Thread.currentThread().getName();
+            System.out.println(threadName + " running");
 
             try {
                 Thread.sleep(3000);
@@ -12,7 +13,7 @@ public class ThreadExample3 {
                 e.printStackTrace();
             }
 
-            System.out.println("The thread finished");
+            System.out.println(threadName + " finished");
         }, "Thread1");
         thread.start();
     }

@@ -20,12 +20,16 @@ public class ThreadLocalInitialValueExample2 {
         });
 
         Thread thread1 = new Thread(() -> {
+            // 각 다른 MyObject를 ThreadLocal에서 생성
             System.out.println("threadlocal value1: " + threadLocal1.get());
+            // 각 다른 MyObject를 ThreadLocal에서 생성
             System.out.println("threadlocal value2: " + threadLocal2.get());
         });
 
         Thread thread2 = new Thread(() -> {
+            // 각 다른 MyObject를 ThreadLocal에서 생성
             System.out.println("threadlocal value1: " + threadLocal1.get());
+            // 각 다른 MyObject를 ThreadLocal에서 생성
             System.out.println("threadlocal value2: " + threadLocal2.get());
         });
 
