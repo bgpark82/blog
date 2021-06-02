@@ -1,5 +1,6 @@
 package com.bgpark.quadkey.domain.place.document;
 
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,13 +48,30 @@ class PlaceRedisRepositoryTest {
 
     @Test
     void opsList() {
+        // given
         ReactiveListOperations<String, String> listOps = operations.opsForList();
-        String key = "list";
+        String key = "list1";
 
-        operations.delete(key);
+        // when
+        Mono<Long> results = listOps.leftPushAll(key, "1", "2", "3");
 
-        Mono<Long> results = listOps.leftPushAll(key, "0", "1", "2");
+        // then
         StepVerifier.create(results).expectNext(3L).verifyComplete();
+        StepVerifier.create(operations.type(key)).expectNext(DataType.LIST).verifyComplete();
+    }
+
+    @Test
+    void opsListDomain() {
+        // given
+        ArrayList<PlaceDocument> placeDocuments = Lists.newArrayList(new PlaceDocument("1", "111"), new PlaceDocument("2", "222"));
+        ReactiveListOperations<String, String> listOps = operations.opsForList();
+        String key = "places";
+
+        // when
+//        Mono<Long> results = listOps.leftPushAll(key, placeDocuments);
+
+        // then
+//        StepVerifier.create(results).expectNext(3L).verifyComplete();
         StepVerifier.create(operations.type(key)).expectNext(DataType.LIST).verifyComplete();
     }
 

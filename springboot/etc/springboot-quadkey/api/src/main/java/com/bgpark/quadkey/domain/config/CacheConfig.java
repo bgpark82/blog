@@ -16,8 +16,6 @@ public class CacheConfig extends CachingConfigurerSupport {
 
     @Bean
     public Caffeine caffeineConfig() {
-
-
         return Caffeine.newBuilder()
                 .maximumSize(CACHE_MAX_SIZE)
                 ;
