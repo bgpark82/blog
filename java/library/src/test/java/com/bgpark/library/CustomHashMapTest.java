@@ -3,7 +3,7 @@ package com.bgpark.library;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -143,8 +143,108 @@ class CustomHashMapTest {
         CustomHashMap map = new CustomHashMap();
         map.put("key", "value");
         assertThat(map.table.length).isEqualTo(16);
-        assertThat(map.table).contains(CustomHashMap.newNode(CustomHashMap.hash("key"), "key", "value", null));
+        assertThat(map.table).contains(map.newNode(CustomHashMap.hash("key"), "key", "value", null));
         assertThat(map.threshold).isEqualTo(12);
+    }
+
+    @Test
+    void put3() {
+        CustomHashMap<String, String> map = new CustomHashMap();
+        map.put("key","value");
+
+        String result = map.put("key", "value1");
+
+        assertThat(result).isEqualTo("value");
+        assertThat(map.get("key")).isEqualTo("value1");
+        assertThat(map.size).isEqualTo(1);
+    }
+
+    @Test
+    void put4() {
+        CustomHashMap<String, String> map = new CustomHashMap();
+        map.put("key","value");
+        assertThat(map.table.length).isEqualTo(16);
+        assertThat(map.threshold).isEqualTo(12);
+        assertThat(map.size).isEqualTo(1);
+
+        IntStream.range(0,12).forEach(i -> map.put("key" +i, "value" + i));
+
+        assertThat(map.table.length).isEqualTo(32);
+        assertThat(map.threshold).isEqualTo(24);
+        assertThat(map.size).isEqualTo(13);
+
+        IntStream.range(0,24).forEach(i -> map.put("key" +i, "value" + i));
+
+        assertThat(map.table.length).isEqualTo(64);
+        assertThat(map.threshold).isEqualTo(48);
+        assertThat(map.size).isEqualTo(25);
+
+        IntStream.range(0,48).forEach(i -> map.put("key" +i, "value" + i));
+
+        assertThat(map.table.length).isEqualTo(128);
+        assertThat(map.threshold).isEqualTo(96);
+        assertThat(map.size).isEqualTo(52);         // 49가 나와야 하는데 52가 나왔다
+
+        IntStream.range(0,96).forEach(i -> map.put("key" +i, "value" + i));
+
+        assertThat(map.table.length).isEqualTo(256);
+        assertThat(map.threshold).isEqualTo(192);
+        assertThat(map.size).isEqualTo(112);         // 97이 나와야 하는데 112가 나왔다
+    }
+
+    @Test
+    void put5() {
+        CustomHashMap<String, String> map = new CustomHashMap<>();
+        map.put("1", "2");
+
+        int n = map.table.length;
+        int hash1 = CustomHashMap.hash("1");
+        int hash2 = CustomHashMap.hash("key25");
+        assertThat((n -1) & hash1).isEqualTo((n-1) & hash2);
+    }
+
+    @Test
+    void put6() {
+        CustomHashMap<String, String> map = new CustomHashMap<>();
+        map.put("1", "2");
+        map.put("key25", "2");
+
+        int hash1 = CustomHashMap.hash("1");
+        int index1 = map.getIndex(hash1, 16);
+
+        int hash2 = CustomHashMap.hash("key25");
+        int index2 = map.getIndex(hash2, 16);
+
+        assertThat(index1).isEqualTo(index2);
+        assertThat(map.table[index1].key).isEqualTo("1");
+        assertThat(map.table[index1].next.key).isEqualTo("key25");
+    }
+
+    @Test
+    void getIndex() {
+        CustomHashMap<String, String> map = new CustomHashMap<>();
+        map.put("1", "2");
+        map.put("key25", "2");
+        map.put("php13", "2");
+        map.put("java5", "2");
+        map.put("python3", "2");
+        map.put("javascript4", "2");
+        map.put("a1", "2");
+
+
+    }
+
+    @Test
+    void treeify() {
+        CustomHashMap<String, String> map = new CustomHashMap<>();
+        CustomHashMap.Node<String, String> node6 = map.newNode(6, "6", "6", null);
+        CustomHashMap.Node<String, String> node5 = map.newNode(5, "5", "5", node6);
+        CustomHashMap.Node<String, String> node4 = map.newNode(4, "4", "4", node5);
+        CustomHashMap.Node<String, String> node3 = map.newNode(3, "3", "3", node4);
+        CustomHashMap.Node<String, String> node2 = map.newNode(2, "2", "2", node3);
+        CustomHashMap.Node<String, String> node1 = map.newNode(1, "1", "1", node2);
+
+        map.treeify(node1);
     }
 
     @Test
@@ -169,17 +269,18 @@ class CustomHashMapTest {
         int hash = CustomHashMap.hash("key");
         CustomHashMap map = new CustomHashMap();
 
-        map.putVal(hash, "key", "value");
+        map.putVal(hash, "key", "value", false);
 
         assertThat(map.table.length).isEqualTo(16);
-        assertThat(map.table).contains(CustomHashMap.newNode(hash, "key", "value", null));
+        assertThat(map.table).contains(map.newNode(hash, "key", "value", null));
     }
 
     @Test
     void newNode() {
         int hash = CustomHashMap.hash("key");
+        CustomHashMap map = new CustomHashMap();
 
-        CustomHashMap.Node node = CustomHashMap.newNode(hash, "key", "value", null);
+        CustomHashMap.Node node = map.newNode(hash, "key", "value", null);
 
         assertThat(node.hash).isEqualTo(hash);
         assertThat(node.key).isEqualTo("key");

@@ -7,11 +7,17 @@ public class CustomHashMap<K,V> {
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
     static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;
     static final int MAXIMUM_CAPACITY = 1 << 30;
+    static final int TREEIFY_THRESHOLD = 3;         // origin: 8
+    static final int MIN_TREEIFY_CAPACITY = 64;
 
     transient Node<K,V>[] table;
 
+    // threshold 만들 때 사용하는 값
     final float loadFactor;
+    // 배열에 실제 들어있는 값의 개수(size)가 threshold를 넘어가면 resize
     int threshold;
+    // 배열에 실제 들어있는 값의 개수
+    int size;
 
     public CustomHashMap() {
         this.loadFactor = DEFAULT_LOAD_FACTOR;
@@ -51,29 +57,122 @@ public class CustomHashMap<K,V> {
         return (key == null) ? 1 : (h = key.hashCode()) ^ (h >>> 16);
     }
 
-    static Node newNode(int hash, String key, String value, Node next) {
+    Node<K,V> newNode(int hash, K key, V value, Node<K,V> next) {
         return new Node(hash, key, value, next);
     }
 
-    final String putVal(int hash, String key, String value) {
-        Node[] curTable;
-        Node p;
+    final V putVal(int hash, K key, V value, boolean onlyIfAbsent) {
+        Node<K,V>[] curTable;
+        Node<K,V> node;
         int length;
         int i;
 
-        // 테이블이 null이거나 비어있는 경우
+        // 1. 테이블이 비어있는 경우 초기화
         if((curTable = table) == null || (length = curTable.length) == 0) {
             length = (curTable = resize()).length;
         }
+        System.out.println("===>> index : " + getIndex(hash, length) + ", key : " + key + ", hash : " + hash+ ", size : " + size+ ", length : " + length);
 
-        // 해당 키에 값이 없으면 새로운 노드 추가
-        if((p = curTable[i = getKey(hash, length)]) == null) {
+        // 2. 해당 index 에 값이 없으면 새로운 노드 추가
+        if((node = curTable[i = getIndex(hash, length)]) == null) {
             curTable[i] = newNode(hash, key, value, null);
+
+        // 3. 해당 index 에 값이 있는 경우
+        } else {
+            Node<K,V> tmpNode = null;
+            K k;
+
+            // 같은 hash에 같은 key이면, 해당 index에 새로운 값으로 교체
+            if(node.hash == hash && ((k = node.key) == key || (key != null && key.equals(k)))) {
+                tmpNode = node;
+            // 다른 hash에 다른 key이면, 해당 index에 값에 노드 연결
+            } else {
+                for(int binCount = 0; ; ++binCount) {
+                    // LinkedList로 연결한다
+                    if((tmpNode = node.next) == null) {
+                        System.out.println("index : " + getIndex(hash, length) + ", key : " + key + ", hash : " + hash+ ", size : " + size+ ", length : " + length);
+
+                        node.next = newNode(hash, key, value, null);
+
+                        // node가 길어지면 tree 형태로 변환한다
+                        if(binCount >= TREEIFY_THRESHOLD - 1) {
+                            treeifyBin(table, hash);
+                        }
+                        break;
+                    }
+                    // 다음 노드
+                    node = tmpNode;
+                }
+            }
+
+            if(tmpNode != null) {
+                V oldValue = tmpNode.value;
+                if(!onlyIfAbsent || oldValue == null) {
+                    tmpNode.value = value;
+                }
+                return oldValue;
+            }
+        }
+
+        // size가 threshold보다 크면 size 키운다 (12, 24, 48...)
+        if(++size > threshold) {
+            resize();
         }
 
         return null;
     }
 
+    private void treeifyBin(Node<K,V>[] table, int hash) {
+        int length;
+        int index;
+        Node<K,V> node;
+        if(table == null || (length = table.length) < MIN_TREEIFY_CAPACITY) {
+            resize();
+
+        // 테이블의 길이가 64이상이면 TreeNode로 변환
+        } else if ((node = table[getIndex(hash, length)]) != null) {
+            treeify(node);
+        }
+    }
+
+    void treeify(Node<K, V> node) {
+        TreeNode<K,V> root = null;
+        TreeNode<K,V> leaf = null;
+        do {
+            TreeNode<K, V> treeNode = replacementTreeNode(node, null);
+            if(leaf == null) {
+                root = treeNode;
+            } else {
+                treeNode.prev = leaf;
+                leaf.next = treeNode;
+            }
+            leaf = treeNode;
+            System.out.println("root : " + root +", leaf : " + leaf +", treeNode : " + treeNode);
+
+        } while((node = node.next) != null);
+    }
+
+    private TreeNode<K,V> replacementTreeNode(Node<K,V> node, Node<K,V> next) {
+        return new TreeNode<>(node.hash, node.key, node.value, next);
+    }
+
+    static class TreeNode<K,V> extends Node {
+        TreeNode<K,V> parent;
+        TreeNode<K,V> left;
+        TreeNode<K,V> right;
+        TreeNode<K,V> prev;
+        boolean red;
+
+        TreeNode(int hash, K key, V value, Node<K,V> next) {
+            super(hash, key, value, next);
+        }
+    }
+
+    /**
+     * resize 할 때마다 size, threshold 두배씩 증가
+     * size = 16, 32, 64, 128, 256..
+     * threshold = 12, 24, 48, 96, 192...
+     */
     final Node[] resize() {
         Node[] oldTable = table;
 
@@ -82,19 +181,38 @@ public class CustomHashMap<K,V> {
         int newCapacity = 0;
         int newThreshold = 0;
 
-
-        newCapacity = DEFAULT_INITIAL_CAPACITY;
-        newThreshold = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+        // 기존 값이 있는 경우
+        if(oldCapacity > 0) {
+            if((newCapacity = oldCapacity << 1) < MAXIMUM_CAPACITY && oldCapacity >= DEFAULT_INITIAL_CAPACITY) {
+                newThreshold = oldThreshold << 1;
+            }
+        // 초기화
+        } else {
+            newCapacity = DEFAULT_INITIAL_CAPACITY;
+            newThreshold = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+        }
 
         Node[] newTable = new Node[newCapacity];
         threshold = newThreshold;
         table = newTable;
+        if(oldTable != null) {
+            for(int j = 0; j < oldCapacity; ++j) {
+                Node<K,V> e;
+                if((e = oldTable[j]) != null) {
+                    oldTable[j] = null;
+                    // 새로운 table에 기존 node 할당
+                    if(e.next == null) {
+                        newTable[e.hash & (newCapacity - 1)] = e;
+                    }
+                }
+            }
+        }
 
         return newTable;
     }
 
-    public void put(String key, String value) {
-        putVal(hash(key), key, value);
+    public V put(K key, V value) {
+        return putVal(hash(key), key, value, false);
     }
 
     public V get(Object key) {
@@ -110,7 +228,7 @@ public class CustomHashMap<K,V> {
 
         if((curTable = table) != null &&
             (length = table.length) > 0 &&
-            (first = curTable[getKey(hash, length)]) != null) {
+            (first = curTable[getIndex(hash, length)]) != null) {
 
             if(first.hash == hash &&
                     ((k = first.key) == key || (key != null && key.equals(k)))) {
@@ -121,7 +239,7 @@ public class CustomHashMap<K,V> {
         return null;
     }
 
-    final int getKey(int hash, int length) {
+    final int getIndex(int hash, int length) {
         return (length - 1) & hash;
     }
 
@@ -133,7 +251,7 @@ public class CustomHashMap<K,V> {
         V value;
         Node<K,V> next;
 
-        public Node(int hash, K key, V value, Node next) {
+        Node(int hash, K key, V value, Node<K,V> next) {
             this.hash = hash;
             this.key = key;
             this.value = value;
@@ -151,6 +269,16 @@ public class CustomHashMap<K,V> {
         @Override
         public int hashCode() {
             return Objects.hash(hash, key, value, next);
+        }
+
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "hash=" + hash +
+                    ", key=" + key +
+                    ", value=" + value +
+                    ", next=" + next +
+                    '}';
         }
     }
 }
