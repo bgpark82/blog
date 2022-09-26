@@ -110,7 +110,7 @@ because last Trie node always has the empty array and marker of last node which 
     true  true  true
     ```
     
-3. DFS in Tree
+3. DFS structure in Tree
     
     ```java
     private void dfs() {
