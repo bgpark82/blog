@@ -6,106 +6,125 @@ subtitle:
 header-img:
 tags:
 ---
-
-## Conditions
-
----
-
-1. Time Complexity is O(logN)
-2. `*nums*` is sorted in ascending order다
-3. `*nums*` is with distinct values
-
-What we can get from conditions is that it is binary search question since it has to take only O(logN) to search the target value in array
-
-## Solve by hands first
+### **Requirements**
 
 ---
 
-to use the binary search algorithm, **arrays need to be sorted**. but the given nums is rotated at certain pivot index which means the sub array of nums is in ascneding order. so if we are able to find the pivot index, we could use the binary search algorithm to find the target value. but in the condition, the whole time complexity needs to be O(logN), we also have to use the binary search to find the pivot index value
+- integer array `nums` sorted in ascending order (with **distinct** values).
+- **possibly rotated** at an unknown pivot index `k`
+- return *the index of* `target` *if it is in* `nums`*, or* `-1` *if it is not in* `nums`
+- You must write an algorithm with `O(log n)` runtime complexity.
 
-## Solution
+### **Edge cases**
+
+---
+
+- [4,5,6,7,0,1,2], 0 → 4 (exist)
+- [4,5,6,7,0,1,2], 3 → -1 (non-exist)
+- [0], 1 → -1 (non-exist)
+
+### **Brute force approach (Discussion + Complexity)**
+
+---
+
+we can’t use the brute force way because the quired runtime complexity is O(logn). binary search can be a good start for this problem since the array is already sorted.
+
+### **Optimised approach (Discussion + Complexity) …X times**
+
+---
+
+we can start with finding pivot index. Because left and right sub arrays are already sorted from the pivot. it makes easy to find the target value by using the binary search. so total time complexity is O(logn) + O(logn) + O(logn) = O(logn)
+
+### **Coding**
 
 ---
 
 ```java
 class Solution {
     public int search(int[] nums, int target) {
-        if(nums.length == 0 || nums == null) return -1;
         
-        // 1. find the pivot index with the binary search
-        int l = 0;
-        int r = nums.length-1;
-        
+        // nums = [4,5,6,7,0,1,2], target = 0
+        //         l     m     r            
+        // nums = [6,7,0,1,2,4,5], target = 0
+        //         l     m     r            
+        //         l m r
+        //             l
+        int l = 0, r = nums.length - 1;
         while(l < r) {
-            int m = l + (r - l)/2;
-            if(nums[m] > nums[r]) { // 1 > 3  r = 2 -> 0
-                l = m + 1;
-            } else {
-                r = m;
-            }
+            int m = (l + r) / 2;
+            if(nums[m] > nums[r]) l = m + 1;
+            else r = m;
         }
-        
-        // 2. select the sub array which has target value and reset the left and right index of the sub array
-        int s = l;
-        l = 0;
-        r = nums.length-1;
+        int p = l;
 
-        if(target >= nums[s] && target <= nums[r]) {
-            l = s;
-        } else {
-            r = s;
-        }
-        
-        // 3. search the target index in sub array
+        // left sub array
+        l = 0; r = p - 1;
         while(l <= r) {
-            int m = l + (r - l)/2;
-            if(nums[m] == target) {
-                return m;
-            } else if (nums[m] < target) {
-                l = m + 1;
-            } else {
-                r = m - 1;
-            }
+            int m = (l + r) / 2;
+            if(nums[m] == target) return m;
+            else if(nums[m] > target) r = m - 1;
+            else l = m + 1;
         }
 
+        // right sub array
+        l = p; r = nums.length - 1;
+        while(l <= r) {
+            int m = (l + r) / 2;
+            if(nums[m] == target) return m;
+            else if(nums[m] > target) r = m - 1;
+            else l = m + 1;
+        }
+        
         return -1;
+        
     }
-}
 ```
 
-## Lesson I learnt
+### **Dry Run**
 
 ---
 
-1. setting right index 
-2. mid point in even length of array
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0147f6f2-df70-465f-b244-d9df82f34edf/Untitled.png)
+
+### What I learned
+
+---
+
+1. Don’t forget the equals comparison in a while loop to find the target
+
+```java
+while(l <= r)
+```
+
+1. mid point in even length of array
     - in java, **the actual number will be truncated in *`int`* data type**
-    
-    ```sql
-    [1,2,3,4]
-    
-    int left = 0;
-    int right = 3;
-    int mid = left + (right - left) / 2;
-            = 0 + (3 - 0)/2
-            = 0 + 1.5
-            = 1
-    ```
-    
-3. condition in while loop 
+
+```sql
+[1,2,3,4]
+
+int left = 0;
+int right = 3;
+int mid = left + (right - left) / 2;
+        = 0 + (3 - 0)/2
+        = 0 + 1.5
+        = 1
+int mid = (left + right) / 2;
+```
+
+1. condition in while loop 
     - In binary search, condition in while loop has to be `*left ≤ right*`, **if size of the array is one, then it happen to compare the same index**
     - **The left and right index updated with +1 and -1** in order to meet the *`left ≤ right`* condition. otherwise it will stuck in while loop at certain point in time. for instance left = 1, right = 1
     - ex) array = [1], left = 0, right = 0 → when left < right in while condition, it can’t go into the while loop since it does not meet the condition
-    
-    ```java
-    while(l <= r) {
-        int m = l + (r - l)/2;
-        if(nums[m] == target) {
-            return m;
-        } else if (nums[m] < target) {
-            l = m + 1;
-        } else {
-            r = m - 1;
-        }
+
+```java
+while(l <= r) {
+    int m = l + (r - l)/2;
+    if(nums[m] == target) {
+        return m;
+    } else if (nums[m] < target) {
+        l = m + 1;
+    } else {
+        r = m - 1;
     }
-    ```
+}
+```
