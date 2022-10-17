@@ -41,28 +41,45 @@ Check each element if it’s letter or numeric. if the character is letter and u
 
 After iteration complete, check if the string is palindrome or not
 
+Time complexity is O(n)
+
 ### **Optimised approach (Discussion + Complexity) …X times**
 
 ---
 
-*the interviewer can provide you with some hints to unblock you*
+We can just compare from very left and right characters. if each of the character is not letter or digits then move the pointer to left or right. otherwise compare the chrarcter of left and right index, if those are not the same character then return false, otherwise move the pointer to left and right.
 
-*it’s okay to ask the interviewer for direction.*
+Time complexity is O(n)
 
 ### **Coding**
 
 ---
 
-*The interviewer is satisfied with the approach you discussed, and they give you a go-ahead.*
-
-*you let the interviewer know that you can’t go any further. the interviewer might give you more hints, or ask you to proceed with the coding.*
+```java
+class Solution {
+    public boolean isPalindrome(String s) {
+        int l = 0, r = s.length() - 1;
+        while(l <= r) {
+            if(!Character.isLetterOrDigit(s.charAt(l))) l++; 
+            else if(!Character.isLetterOrDigit(s.charAt(r))) r--;
+            else {
+                if(Character.toLowerCase(s.charAt(l)) != Character.toLowerCase(s.charAt(r))) return false;
+                l++; r--;
+            }
+        }
+        return true;
+    }
+}
+```
 
 ### **Dry Run**
 
 ---
 
-*It is extremely important to run it through a couple of sample test cases*
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ad2a96b5-ad39-4fb4-9e66-dba769650eda/Untitled.png)
 
 ### What I learned
 
 ---
+
+1. Compare from left and right index to solve the Palindrome problem
