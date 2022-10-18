@@ -89,17 +89,7 @@ return max;
 class Solution {
     public int maxProfit(int[] prices) {
         int max = 0, l = 0, r = 0;
-        while(r <th) {xCur = Math.max(0, maxCur += prices[i] - prices[i-1]);
-        maxSoFar = Math.max(maxCur, maxSoFar);
-    }
-    return maxSoFar;
-}
-```
-
-1. Two pointer can be from 0 to last index or start from 0 at the same time
-    - **left = 0, right = n.length**
-    - **left = 0, right = 0**
-2. Two pointer is a good solution for Array problem
+        while(r <th) {
             if(prices[l] < prices[r]) max = Math.max(max, prices[r] - prices[l]);
             else l = r;
             r++;
@@ -107,7 +97,7 @@ class Solution {
         return max;
     }
 }
-```
+``` 
 
 ### **Dry Run**
 
@@ -126,4 +116,14 @@ class Solution {
 public int maxProfit(int[] prices) {
     int maxCur = 0, maxSoFar = 0;
     for(int i = 1; i < prices.length; i++) {
-        ma prices.leng
+        maxCur = Math.max(0, maxCur += prices[i] - prices[i-1]);
+        maxSoFar = Math.max(maxCur, maxSoFar);
+    }
+    return maxSoFar;
+}
+```
+
+1. Two pointer can be from 0 to last index or start from 0 at the same time
+    - **left = 0, right = n.length**
+    - **left = 0, right = 0**
+2. Two pointer is a good solution for Array problem
