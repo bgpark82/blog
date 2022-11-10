@@ -156,7 +156,27 @@ Assumption
 
 웹 크롤러는 호스트네임과 IP주소를 매핑하는 DNS Resolver가 필요합니다. 왜냐하면 **DNS lookup은 시간이 상당히 소요되는 작업**이므로 **커스텀 DNS Resolver**와 **time-to-live (TTL) 내 살아있는 자주 사용하는 IP주소를 캐싱**하는게 좋습니다. 
 
-### HTML fetcher
+### 3. HTML fetcher
+
+HTML fetcher는 URL을 호스팅하는 서버와 커뮤니케이션해야 합니다. 주로 HTTP 프로토콜을 사용하지만 HTML fetcher는 여러 프로토콜에 확장 가능해야 합니다. 
+
+### 4. Server host 
+
+Server는 워커 크롤러를 가지고 있는 컴포넌트입니다. 주로 3가지 일을 합니다.
+
+1. 멀티 워커 아키텍처를 가집니다. 각 워커 크롤러들은 URL frontier(Priority Queue)와 커뮤니케이션하면서 Deque 작업을 합니다. 
+2. 각 워커들은 Priority Queue에서 획득한 URL을 DNS Resolver를 통해 DNS를 해석합니다.
+3. 각 워커들은 DNS Resolution으로 획득한 정보를 HTML Fetcher로 전송하게 됩니다.
+
+### 5. Extractor
+
+HTML fetcher가 웹 페이지를 가져오면 웹 페이지에서 **URL**과 **Content** 2가지를 가져옵니다.  Extractor는 URL와 컨텐츠를 document input stream(DIS)과 함께 duplicate eliminator로 보냅니다. DIS는 추출된 Url이나 컨텐츠를 저장하는 캐시입니다. 그래서 다른 컴포넌트들이 접근하여 조회할 수 있도록 합니다. 
+
+**데이터 저장소에서 중복된 데이터가 없다고 판단**되면 Extractor는 **URL을 스케쥴러(Priority Queue)로 보냅니다**. 또한 **Blob 저장소에 인덱스 목적으로 컨텐츠를 저장합니다**
+
+
+
+### 6. Duplicate eliminator
 
 
 
@@ -173,3 +193,28 @@ Assumption
 ## 4. Evaluation
 
 마지막으로 지금까지 작성한 시스템 디자인이 크롤러의 요구사항에 맞는지 재평가하는 시간을 가져보았습니다.
+
+
+
+
+
+> Blob Storage
+
+## TODOS
+
+전체 목록을 적는다
+
+1. functional requirement
+2. non-functional requirement
+
+목표와 목표가 아닌 것으로 구분한다
+
+1. 목표
+
+   
+
+2. 목표가 아닌 것
+
+
+
+목표가 아닌 것은 개선 사항으로 넣어 놓는다
