@@ -7,6 +7,7 @@ header-img:
 tags:
 ---
 
+## 정의
 SQL Injection은 **데이터베이스에 악의적인 SQL문을 삽입하여 공격**하는 행위이다
 
 
@@ -31,6 +32,7 @@ WHERE (id = 'id' AND password = 'password') OR 1=1
 ### 1. Parameter Binding
 
 SQL Injection은 **Parameter Binding**으로 해결가능하다
+JDBC는 `PrepareStatement`를 제공하여 타입에 맞는 파라미터만 바인딩할 수 있게한다
 
 MyBatis에서는 SQL Mapper에 `$` 대신  `#` 문법을 사용한다. `$`문법은 Parameter를 쿼리문에 바로 입력되고 `#` 문법은 Parameter에 `'`로 감싸기 때문에 SQL Injection이 불가능하다
 
