@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Bgpark Blog
+title: Paak's Blog
 subtitle: welcome to earth
 author: bgpark
 language:
@@ -19,11 +19,11 @@ permalink_defaults:
 #Custom Setting Start
 
 # Site settings
-SEOTitle: Beantech | 豆科技
-email: beantech@gmail.com
+SEOTitle: Paak's Blog
+email: bgpark82@gmail.com
 description: ""
 keyword: ""
-header-img: img/header_img/home-bg-2-dark.png
+header-img: img/header_img/home-bg-2-dark.png # home background image
 signature: true #show signature
 signature-img: img/signature/BeanTechSign-white.png 
 
@@ -35,7 +35,7 @@ signature-img: img/signature/BeanTechSign-white.png
 github_username:    bgpark82
 # twitter_username:   Demonbane_x
 facebook_username:  
-linkedin_username:  bgpark82
+linkedin_username:  byeonggilpark
 
 # Build settings
 anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
@@ -61,7 +61,7 @@ ga_domain: yoursite
 # Sidebar settings
 sidebar: true                       # whether or not using Sidebar.
 sidebar-about-description: "Hi, i'm Peter Park"
-sidebar-avatar: img/ironman-draw.png      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: img/bgpark/profile.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 widgets:
 - featured-tags
 - short-about
@@ -84,17 +84,8 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 ## Friends
 friends: [
     {
-        title: "Bean Tech",
-        href: "http://beantech.org"
-    },{
-        title: "Kaijun's Blog",
-        href: "http://blog.kaijun.rocks"
-    },{
-        title: "Hux Blog",
-        href: "http://huangxuan.me"
-    },{
-        title: "It Helps SEO",
-        href: "#"
+        title: "Byeonggil Park's Blog",
+        href: "https://bgpark.tistory.com"
     }
 ]
 
